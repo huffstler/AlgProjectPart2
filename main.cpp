@@ -78,8 +78,25 @@ void importData(){
             //.add(tempStringP);
             count++;
         }
-               
-               cout << &importedData << " ";
+    
+    if(!importedData.empty())
+    {
+        auto iter = importedData.begin();
+        while(true)
+        {
+            cout << *iter;
+            ++iter;
+            if(iter == importedData.end())
+            {
+                break;
+            }
+            else
+            {
+                cout << ", ";
+            }
+        }
+    }
+             //  cout << importedData << " ";
 }
 
                
@@ -124,5 +141,6 @@ void returnResults(){
 
 // Main method
 int main() {
+    importData();
     
 }
