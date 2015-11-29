@@ -1,4 +1,5 @@
 #include <cstdlib>
+//#include <std::hash>
 
 using namespace std;
 
@@ -15,13 +16,16 @@ program returns the amount of times that the query appears in given document
 
 */
 
+unordered_map<string,string> stopMap;
+
+
 // This reads in an input file from stdin
 void getFile() {
 	
 }
 
 // this removes stop words from the input (and the query)
-void stopwords() {
+void rmStopwords() {
 	
 }
 
