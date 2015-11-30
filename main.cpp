@@ -294,8 +294,32 @@ void step2 (string *input) {
 			if (*input.substr(end-5, 6) == "biliti") {*input.replace(substr(end-5, 6) "ble"); break;}
 		//case 'g':
 	}
-	
 }
+
+void step3 (string *input) {
+	switch(*input.end()){
+		case 'e':
+			if (*input.substr(end-4, 5) == "icate") {*input.replace(substr(end-4, 5), "ic"); break;}
+			if (*input.substr(end-4, 5) == "ative") {*input.replace(substr(end-4, 5), ""); break;}
+			if (*input.substr(end-4, 5) == "alize") {*input.replace(substr(end-4, 5), "al"); break;}
+			break;
+		case 'i':
+			if (*input.substr(end-4, 5) == "iciti") {*input.replace(substr(end-4, 5), "ic"); break;}
+			break;
+		case 'l':
+			if (*input.substr(end-3, 4) == "ical") {*input.replace(substr(end-3, 4), "ic"); break;}
+			if (*input.substr(end-2, 3) == "ful") {*input.replace(substr(end-2, 3), ""); break;}
+			break;
+		case 's':
+			if (*input.substr(end-3, 4) == "ness") {*input.replace(substr(end-3, 4), ""); break;}
+			break;
+	}
+}
+
+void step4 (string *input) {}
+	
+void step5 (string *input) {}
+
 // This reads in the user query from stdin
 void getQuery() {
 
