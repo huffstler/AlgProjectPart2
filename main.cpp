@@ -15,7 +15,6 @@
 
 using namespace std;
 
-//Plan out how this shit is going to work.
 /*
 Program Flow:
 
@@ -27,10 +26,15 @@ program returns the amount of times that the query appears in given document
 */
 
 unordered_map<int, string> mymap;
+
 list<string> importedData;
+
 hash<string> strhash;
+
 void stem(string& word);
+
 void trim(string& word);
+
 size_t firstNonVowelAfterVowel(const string& word, size_t start);
 
 size_t getStartR1(const string& word);
@@ -68,9 +72,10 @@ bool endsWith(const string& word, const string& str);
 bool endsInDouble(const string& word);
 
 bool replaceIfExists(string& word, const string& suffix,
-	const string& replacement, size_t start);
+	
+const string& replacement, size_t start);
 
-bool isValidLIEnding(char ch);
+bool validEndsWithLI(char ch);
 
 bool containsVowel(const string& word, size_t start, size_t end);
 
@@ -151,21 +156,13 @@ void populateMap() { // Done
 }
 
 // This stems the string that it is given
-void stem(string& word)
-{
+void stem(string& word) {
 	// special case short words or sentence tags
-	if (word.size() <= 2 || word == "<s>" || word == "</s>")
+	if (word.size() <= 2)
 		return;
-
-	// max word length is 35 for English
-	if (word.size() > 35)
-		word = word.substr(0, 35);
 
 	if (word[0] == '\'')
 		word = word.substr(1, word.size() - 1);
-
-	if (special(word))
-		return;
 
 	changeY(word);
 	size_t startR1 = getStartR1(word);
@@ -173,8 +170,7 @@ void stem(string& word)
 
 	step0(word);
 
-	if (step1A(word))
-	{
+	if (step1A(word)) {
 		replace(word.begin(), word.end(), 'Y', 'y');
 		return;
 	}
@@ -190,20 +186,15 @@ void stem(string& word)
 	return;
 }
 
-void trim(string& word)
-{
-	if (word == "<s>" || word == "</s>")
-		return;
+void trim(string& word) {
 
 	transform(word.begin(), word.end(), word.begin(), ::tolower);
-	remove_if(word.begin(), word.end(), [](char ch)
-	{
-		return !((ch >= 'a' && ch <= 'z') || ch == '\'');
+	remove_if(word.begin(), word.end(), [](char c) {
+		return !((c >= 'a' && c <= 'z') || c == '\'');
 	});
 }
 
-size_t getStartR1(const string& word)
-{
+size_t getStartR1(const string& word) {
 	// special cases
 	if (word.size() >= 5 && word[0] == 'g' && word[1] == 'e' && word[2] == 'n'
 		&& word[3] == 'e' && word[4] == 'r')
@@ -219,9 +210,7 @@ size_t getStartR1(const string& word)
 	return firstNonVowelAfterVowel(word, 1);
 }
 
-size_t getStartR2(const string& word,
-	size_t startR1)
-{
+size_t getStartR2(const string& word, size_t startR1) {
 	if (startR1 == word.size())
 		return startR1;
 
@@ -229,9 +218,7 @@ size_t getStartR2(const string& word,
 }
 
 size_t
-firstNonVowelAfterVowel(const string& word,
-size_t start)
-{
+firstNonVowelAfterVowel(const string& word, size_t start) {
 	for (size_t i = start; i != 0 && i < word.size(); ++i)
 	{
 		if (!isVowelY(word[i]) && isVowelY(word[i - 1]))
@@ -241,13 +228,11 @@ size_t start)
 	return word.size();
 }
 
-void changeY(string& word)
-{
+void changeY(string& word) {
 	if (word[0] == 'y')
 		word[0] = 'Y';
 
-	for (size_t i = 1; i < word.size(); ++i)
-	{
+	for (size_t i = 1; i < word.size(); ++i) {
 		if (word[i] == 'y' && isVowel(word[i - 1]))
 			word[i++] = 'Y'; // skip next iteration
 	}
@@ -256,8 +241,7 @@ void changeY(string& word)
 /**
 Step 0
 */
-void step0(string& word)
-{
+void step0(string& word) {
 	// short circuit the longest suffix
 	replaceIfExists(word, "'s'", "", 0) || replaceIfExists(word, "'s", "", 0)
 		|| replaceIfExists(word, "'", "", 0);
@@ -268,42 +252,30 @@ Step 1a:
 
 sses
 replace by ss
-
 ied   ies
 replace by i if preceded by more than one letter, otherwise by ie
-(so ties -> tie, cries -> cri)
-
 us   ss
 do nothing
-
 s
 delete if the preceding word part contains a vowel not immediately before
 the
 s (so gas and this retain the s, gaps and kiwis lose it)
 */
-bool step1A(string& word)
-{
-	if (!replaceIfExists(word, "sses", "ss", 0))
-	{
-		if (endsWith(word, "ied") || endsWith(word, "ies"))
-		{
+bool step1A(string& word) {
+	if (!replaceIfExists(word, "sses", "ss", 0)) {
+		if (endsWith(word, "ied") || endsWith(word, "ies")) {
 			// if preceded by only one letter
 			if (word.size() <= 4)
 				word.pop_back();
-			else
-			{
+			else {
 				word.pop_back();
 				word.pop_back();
 			}
-		}
-		else if (endsWith(word, "s") && !endsWith(word, "us")
-			&& !endsWith(word, "ss"))
-		{
+		} else if (endsWith(word, "s") && !endsWith(word, "us") && !endsWith(word, "ss")) {
 			if (word.size() > 2 && containsVowel(word, 0, word.size() - 2))
 				word.pop_back();
 		}
 	}
-
 	// special case after step 1a
 	return word == "inning" || word == "outing" || word == "canning"
 		|| word == "herring" || word == "earring" || word == "proceed"
@@ -323,8 +295,7 @@ if the word ends at, bl or iz add e (so luxuriat -> luxuriate), or
 if the word ends with a double remove the last letter (so hopp -> hop), or
 if the word is short, add e (so hop -> hope)
 */
-void step1B(string& word, size_t startR1)
-{
+void step1B(string& word, size_t startR1) {
 	bool exists = endsWith(word, "eedly") || endsWith(word, "eed");
 
 	if (exists) // look only in startR1 now
@@ -358,8 +329,7 @@ Step 1c:
 Replace suffix y or Y by i if preceded by a non-vowel which is not the first
 letter of the word (so cry -> cri, by -> by, say -> say)
 */
-void step1C(string& word)
-{
+void step1C(string& word) {
 	size_t size = word.size();
 	if (size > 2 && (word[size - 1] == 'y' || word[size - 1] == 'Y'))
 		if (!isVowel(word[size - 2]))
@@ -388,10 +358,9 @@ lessli:               replace by less
 ogi:                  replace by og if preceded by l
 li:                   delete if preceded by a valid li-ending
 */
-void step2(string& word, size_t startR1)
-{
+void step2(string& word, size_t startR1) {
 	static const vector<pair<string, string>> subs
-		= { { "ational", "ate" },
+	= { { "ational", "ate" },
 		{ "tional", "tion" },
 		{ "enci", "ence" },
 		{ "anci", "ance" },
@@ -418,20 +387,19 @@ void step2(string& word, size_t startR1)
 		if (replaceIfExists(word, sub.first, sub.second, startR1))
 			return;
 
-	if (!replaceIfExists(word, "logi", "log", startR1 - 1))
-	{
+	if (!replaceIfExists(word, "logi", "log", startR1 - 1)) {
 		// make sure we choose the longest suffix
 		if (endsWith(word, "li") && !endsWith(word, "abli")
 			&& !endsWith(word, "entli") && !endsWith(word, "aliti")
 			&& !endsWith(word, "alli") && !endsWith(word, "ousli")
 			&& !endsWith(word, "bli") && !endsWith(word, "fulli")
 			&& !endsWith(word, "lessli"))
-			if (word.size() > 3 && word.size() - 2 >= startR1
-				&& isValidLIEnding(word[word.size() - 3]))
-			{
-				word.pop_back();
-				word.pop_back();
-			}
+		if (word.size() > 3 && word.size() - 2 >= startR1
+			&& validEndsWithLI(word[word.size() - 3]))
+		{
+			word.pop_back();
+			word.pop_back();
+		}
 	}
 }
 
@@ -447,9 +415,7 @@ icate, iciti, ical: replace by ic
 ful, ness:          delete
 ative:              delete if in R2
 */
-void step3(string& word, size_t startR1,
-	size_t startR2)
-{
+void step3(string& word, size_t startR1, size_t startR2) {
 	static const vector<pair<string, string>> subs
 		= { { "ational", "ate" },
 		{ "tional", "tion" },
@@ -478,8 +444,7 @@ delete
 ion
 delete if preceded by s or t
 */
-void step4(string& word, size_t startR2)
-{
+void step4(string& word, size_t startR2) {
 	static const vector<pair<string, string>> subs
 		= { { "al", "" },
 		{ "ance", "" },
@@ -513,24 +478,19 @@ void step4(string& word, size_t startR2)
 }
 
 /**
-Step 5:
-
-e     delete if in R2, or in R1 and not preceded by a short syllable
-l     delete if in R2 and preceded by l
+* Step 5:
+*
+* e     delete if in R2, or in R1 and not preceded by a short syllable
+* l     delete if in R2 and preceded by l
 */
-void step5(string& word, size_t startR1,
-	size_t startR2)
-{
+void step5(string& word, size_t startR1, size_t startR2) {
 	size_t size = word.size();
-	if (word[size - 1] == 'e')
-	{
+	if (word[size - 1] == 'e') {
 		if (size - 1 >= startR2)
 			word.pop_back();
 		else if (size - 1 >= startR1 && !isShort(word.substr(0, size - 1)))
 			word.pop_back();
-	}
-	else if (word[word.size() - 1] == 'l')
-	{
+	} else if (word[word.size() - 1] == 'l') {
 		if (word.size() - 1 >= startR2 && word[word.size() - 2] == 'l')
 			word.pop_back();
 	}
@@ -541,15 +501,13 @@ void step5(string& word, size_t startR1,
 * Define a short syllable in a word as either
 *
 * (a) a vowel followed by a non-vowel other than w, x or Y and preceded by a
-*non-vowel
+*		non-vowel
 * (b) a vowel at the beginning of the word followed by a non-vowel.
 */
-bool isShort(const string& word)
-{
+bool isShort(const string& word) {
 	size_t size = word.size();
 
-	if (size >= 3)
-	{
+	if (size >= 3) {
 		if (!isVowelY(word[size - 3]) && isVowelY(word[size - 2])
 			&& !isVowelY(word[size - 1]) && word[size - 1] != 'w'
 			&& word[size - 1] != 'x' && word[size - 1] != 'Y')
@@ -557,58 +515,27 @@ bool isShort(const string& word)
 	}
 	return size == 2 && isVowelY(word[0]) && !isVowelY(word[1]);
 }
-
-bool special(string& word)
-{
-	static const unordered_map<string, string> exceptions
-		= { { "skis", "ski" },
-		{ "skies", "sky" },
-		{ "dying", "die" },
-		{ "lying", "lie" },
-		{ "tying", "tie" },
-		{ "idly", "idl" },
-		{ "gently", "gentl" },
-		{ "ugly", "ugli" },
-		{ "early", "earli" },
-		{ "only", "onli" },
-		{ "singly", "singl" } };
-
-	// special cases
-	auto ex = exceptions.find(word);
-	if (ex != exceptions.end())
-	{
-		word = ex->second;
-		return true;
-	}
-
-	// invariants
-	return word == "sky" || word == "news" || word == "howe" || word == "atlas"
-		|| word == "cosmos" || word == "bias" || word == "andes";
+//checks if the character is the vowel type of the 'y' character
+bool isVowelY(char c) {
+	return c == 'e' || c == 'a' || c == 'i' || c == 'o' || c == 'u'
+		|| c == 'y';
 }
 
-bool isVowelY(char ch)
-{
-	return ch == 'e' || ch == 'a' || ch == 'i' || ch == 'o' || ch == 'u'
-		|| ch == 'y';
+//checks if the character is a vowel
+bool isVowel(char c) {
+	return c == 'e' || c == 'a' || c == 'i' || c == 'o' || c == 'u';
 }
 
-bool isVowel(char ch)
-{
-	return ch == 'e' || ch == 'a' || ch == 'i' || ch == 'o' || ch == 'u';
-}
-
-bool endsWith(const string& word,
-	const string& str)
-{
+//determines if the word ends with a certain pattern, specified by the parameters
+bool endsWith(const string& word, const string& str) {
 	return word.size() >= str.size()
 		&& equal(word.begin() + (word.size() - str.size()), word.end(),
 		str.begin());
 }
 
-bool endsInDouble(const string& word)
-{
-	if (word.size() >= 2)
-	{
+//checks if the word ends with double letters
+bool endsInDouble(const string& word) {
+	if (word.size() >= 2) {
 		char a = word[word.size() - 1];
 		char b = word[word.size() - 2];
 
@@ -620,34 +547,28 @@ bool endsInDouble(const string& word)
 	return false;
 }
 
-bool replaceIfExists(string& word,
-	const string& suffix,
-	const string& replacement,
-	size_t start)
-{
+//This method will replace any word with the replacement parameter, starting at the start param
+bool replaceIfExists(string& word, const string& suffix, const string& replacement, size_t start) {
 	size_t idx = word.size() - suffix.size();
 	if (idx < start)
 		return false;
 
-	if (equal(word.begin() + idx, word.end(), suffix.begin()))
-	{
+	if (equal(word.begin() + idx, word.end(), suffix.begin())) {
 		word = word.substr(0, word.size() - suffix.size()) + replacement;
 		return true;
 	}
 	return false;
 }
 
-bool isValidLIEnding(char ch)
-{
-	return ch == 'c' || ch == 'd' || ch == 'e' || ch == 'g' || ch == 'h'
-		|| ch == 'k' || ch == 'm' || ch == 'n' || ch == 'r' || ch == 't';
+
+bool validEndsWithLI(char c) {
+	return c == 'c' || c == 'd' || c == 'e' || c == 'g' || c == 'h'
+		|| c == 'k' || c == 'm' || c == 'n' || c == 'r' || c == 't';
 }
 
-bool containsVowel(const string& word,
-	size_t start, size_t end)
-{
-	if (end <= word.size())
-	{
+//checks to see if the word contains a vowel between start, and end
+bool containsVowel(const string& word, size_t start, size_t end) {
+	if (end <= word.size()) {
 		for (size_t i = start; i < end; ++i)
 			if (isVowelY(word[i]))
 				return true;
@@ -717,10 +638,6 @@ void index() {
 	}
 }
 
-
-
-
-
 //}
 
 /*
@@ -742,24 +659,6 @@ cout << ", ";
 }
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // This reads in the user query from stdin
 void getQuery() {
 
@@ -779,7 +678,4 @@ int main() {
 	//populateMap();// puts the stop words in a map for quick access
 	//  getFile(); // reads std for the file to be input.
 	//index();
-
-
-
 }
