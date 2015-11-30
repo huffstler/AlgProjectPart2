@@ -64,87 +64,6 @@ void getFile(){
 				if (isdigit(tempStringP[i])) {
 					tempStringP.erase(i--, 1);
 					len = tempStringP.size();
-				if (ispunct(tempStringP[i])) {
-					tempStringP.erase(i--, 1);
-					len = tempStringP.size();
-				}
-			}
-
-			//push string with removed punctuation onto the imported data list
-			if (!isStop(tempStringP)) {
-				importedData.push_back(tempStringP);
-			}
-			//count++;
-		}
-	}
-
-	//This prints my imported data so I can see that it is correct
-	//comment in and out as needed
-
-	if (!importedData.empty()) {
-		auto iter = importedData.begin();
-
-		while (true) {
-			cout << *iter;
-			++iter;
-
-			if (iter == importedData.end()) {
-				break;
-			}
-			else {
-				cout << ", ";
-			}
-		}
-	}
-
-	//  printing function ends here
-}
-
-void populateMap() { // Done
-	for (int i = 0; i < stopWords.size(); i++){
-		mymap.insert(make_pair(strhash(stopWords[i]), stopWords[i]));
-	}
-}
-
-// This stems the string that it is given
-void stem(){
-
-}
-
-// this indexes the remaining words from the given input
-void index() {
-	//idea of how to do this. Make index by paragraph instead of document
-	//iterate through list of keywords until a new line is hit (has to be added in primary iteration)
-	//push all these words onto a list named paragraph[i] (where i is the paragraph number)
-	//when a new paragraph starts, make a new list adding in all words
-	//do so until the end, having a seperate list of keywords for each paragraph
-	//for each keyword in orignal list (inputeddata) check if it is in each paragraph
-	//cout keyword: "appears in" (whichever lists it is found in)
-
-
-	list<string> Data;
-	list<list<string>> Pgraphs;
-	string tempStringP;
-	int Pnumber = 0; //current paragraph number
-	while (getline(cin, tempStringP)){
-		while (getline(cin, tempStringP, '\n')){ //reads in a line from ideone
-			Pnumber++;
-
-			// cout << Pnumber << " ";
-
-			for (int i = 0; tempStringP[i] != '\0'; i++) {//lowercase everything
-				tempStringP[i] = tolower(tempStringP[i]);
-			}
-
-			stringstream iss(tempStringP);
-
-			while (getline(iss, tempStringP, ' ')){ //get string up to a space
-
-				//This removes periods
-				unsigned long len = tempStringP.size();
-
-				for (unsigned long i = 0; i < len; i++) {
-
 					if (ispunct(tempStringP[i])) {
 						tempStringP.erase(i--, 1);
 						len = tempStringP.size();
@@ -153,71 +72,153 @@ void index() {
 
 				//push string with removed punctuation onto the imported data list
 				if (!isStop(tempStringP)) {
-					Data.push_back(tempStringP);
+					importedData.push_back(tempStringP);
+				}
+				//count++;
+			}
+		}
+
+		//This prints my imported data so I can see that it is correct
+		//comment in and out as needed
+
+		if (!importedData.empty()) {
+			auto iter = importedData.begin();
+
+			while (true) {
+				cout << *iter;
+				++iter;
+
+				if (iter == importedData.end()) {
+					break;
+				}
+				else {
+					cout << ", ";
 				}
 			}
-			Pgraphs.push_back(Data);
-			Data.clear();
+		}
 
-			/*
-			//printing the lists
-			for(list<list<string>>::iterator iter = Pgraphs.begin(); iter!= Pgraphs.end(); iter++){
-			for(list<string>::iterator iter2 = iter->begin(); iter2!= iter->end(); iter2++){
+		//  printing function ends here
+	}
+}
 
-			cout << Pnumber << "\n ";
-			cout << *iter2;
-
-			if(iter2 == importedData.end()) {
-			break;
-			} else {
-			cout << ", ";
-			}
-			}
-			}
-			*/
-
-			list<list<string>>::iterator row;
-			list<string>::iterator col;
-			for (row = Pgraphs.begin(); row != Pgraphs.end(); row++){
-				for (col = row->begin(); col != row->end(); col++){
-
-				}
-			}
-
-
+	void populateMap() { // Done
+		for (int i = 0; i < stopWords.size(); i++){
+			mymap.insert(make_pair(strhash(stopWords[i]), stopWords[i]));
 		}
 	}
 
+	// This stems the string that it is given
+	void stem(){
 
-}
+	}
 
-
-
-
-
-
-
-
-
-
-
-// This reads in the user query from stdin
-void getQuery() {
-
-}
-
-// This returns the amount of times that the query occurred in the doc
-void returnResults(){
-
-}
-
-// Main method
-int main() {
-
-	populateMap(); // puts the stop words in a map for quick access
-	//  getFile(); // reads std for the file to be input.
-	index();
+	// this indexes the remaining words from the given input
+	void index() {
+		//idea of how to do this. Make index by paragraph instead of document
+		//iterate through list of keywords until a new line is hit (has to be added in primary iteration)
+		//push all these words onto a list named paragraph[i] (where i is the paragraph number)
+		//when a new paragraph starts, make a new list adding in all words
+		//do so until the end, having a seperate list of keywords for each paragraph
+		//for each keyword in orignal list (inputeddata) check if it is in each paragraph
+		//cout keyword: "appears in" (whichever lists it is found in)
 
 
+		list<string> Data;
+		list<list<string>> Pgraphs;
+		string tempStringP;
+		int Pnumber = 0; //current paragraph number
+		while (getline(cin, tempStringP)){
+			while (getline(cin, tempStringP, '\n')){ //reads in a line from ideone
+				Pnumber++;
 
-}
+				// cout << Pnumber << " ";
+
+				for (int i = 0; tempStringP[i] != '\0'; i++) {//lowercase everything
+					tempStringP[i] = tolower(tempStringP[i]);
+				}
+
+				stringstream iss(tempStringP);
+
+				while (getline(iss, tempStringP, ' ')){ //get string up to a space
+
+					//This removes periods
+					unsigned long len = tempStringP.size();
+
+					for (unsigned long i = 0; i < len; i++) {
+
+						if (ispunct(tempStringP[i])) {
+							tempStringP.erase(i--, 1);
+							len = tempStringP.size();
+						}
+					}
+
+					//push string with removed punctuation onto the imported data list
+					if (!isStop(tempStringP)) {
+						Data.push_back(tempStringP);
+					}
+				}
+				Pgraphs.push_back(Data);
+				Data.clear();
+
+				/*
+				//printing the lists
+				for(list<list<string>>::iterator iter = Pgraphs.begin(); iter!= Pgraphs.end(); iter++){
+				for(list<string>::iterator iter2 = iter->begin(); iter2!= iter->end(); iter2++){
+
+				cout << Pnumber << "\n ";
+				cout << *iter2;
+
+				if(iter2 == importedData.end()) {
+				break;
+				} else {
+				cout << ", ";
+				}
+				}
+				}
+				*/
+
+				list<list<string>>::iterator row;
+				list<string>::iterator col;
+				for (row = Pgraphs.begin(); row != Pgraphs.end(); row++){
+					for (col = row->begin(); col != row->end(); col++){
+
+					}
+				}
+
+
+			}
+		}
+
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+	// This reads in the user query from stdin
+	void getQuery() {
+
+	}
+
+	// This returns the amount of times that the query occurred in the doc
+	void returnResults(){
+
+	}
+
+	// Main method
+	int main() {
+
+		populateMap(); // puts the stop words in a map for quick access
+		//  getFile(); // reads std for the file to be input.
+		index();
+
+
+
+	}
