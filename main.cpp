@@ -75,7 +75,6 @@ struct Node{
 	vector<strNode*> nodeList;
 };
 
-
 // This reads in an input file from stdin
 // Reads past new lines now
 vector<Node*> paragraphList;
