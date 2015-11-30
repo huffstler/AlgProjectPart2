@@ -30,50 +30,28 @@ list<string> importedData;
 hash<string> strhash;
 
 void stem(string& word);
-
 void trim(string& word);
-
 size_t firstNonVowelAfterVowel(const string& word, size_t start);
-
 size_t getStartR1(const string& word);
-
 size_t getStartR2(const string& word, size_t startR1);
-
 void changeY(string& word);
-
 void step0(string& word);
-
 bool step1A(string& word);
-
 void step1B(string& word, size_t startR1);
-
 void step1C(string& word);
-
 void step2(string& word, size_t startR1);
-
 void step3(string& word, size_t startR1, size_t startR2);
-
 void step4(string& word, size_t startR2);
-
 void step5(string& word, size_t startR1, size_t startR2);
-
 inline bool isShort(const string& word);
-
 bool special(string& word);
-
 bool isVowel(char c);
-
 bool isVowelY(char c);
-
 bool endsWith(const string& word, const string& str);
-
 bool endsInDouble(const string& word);
-
 bool replaceIfExists(string& word, const string& suffix,
-	const string& replacement, size_t start);
-
+const string& replacement, size_t start);
 bool ValidEndsWithLI(char c);
-
 bool containsVowel(const string& word, size_t start, size_t end);
 
 vector<string> stopWords = { "a", "about", "above", "across", "after", "afterwards", "again", "against", "all", "almost", "alone", "along", "already", "also", "although", "always", "am", "among", "amongst", "amoungst", "amount", "an", "and", "another", "any", "anyhow", "anyone", "anything", "anyway", "anywhere", "are", "around", "as", "at", "back", "be", "became", "because", "become", "becomes", "becoming", "been", "before", "beforehand", "behind", "being", "below", "beside", "besides", "between", "beyond", "bill", "both", "bottom", "but", "by", "call", "can", "cannot", "cant", "co", "computer", "con", "could", "couldnt", "cry", "de", "describe", "detail", "do", "done", "down", "due", "during", "each", "eg", "eight", "either", "eleven", "else", "elsewhere", "empty", "enough", "etc", "even", "ever", "every", "everyone", "everything", "everywhere", "except", "few", "fifteen", "fify", "fill", "find", "fire", "first", "five", "for", "former", "formerly", "forty", "found", "four", "from", "front", "full", "further", "get", "give", "go", "had", "has", "hasnt", "have", "he", "hence", "her", "here", "hereafter", "hereby", "herein", "hereupon", "hers", "him", "his", "how", "however", "hundred", "i", "ie", "if", "in", "inc", "indeed", "interest", "into", "is", "it", "its", "keep", "last", "latter", "latterly", "least", "less", "ltd", "made", "many", "may", "me", "meanwhile", "might", "mill", "mine", "more", "moreover", "most", "mostly", "move", "much", "must", "my", "name", "namely", "neither", "never", "nevertheless", "next", "nine", "no", "nobody", "none", "noone", "nor", "not", "nothing", "now", "nowhere", "of", "off", "often", "on", "once", "one", "only", "onto", "or", "other", "others", "otherwise", "our", "ours", "ourselves", "out", "over", "own", "part", "per", "perhaps", "please", "put", "rather", "re", "same", "see", "seem", "seemed", "seeming", "seems", "serious", "several", "she", "should", "show", "side", "since", "sincere", "six", "sixty", "so", "some", "somehow", "someone", "something", "sometime", "sometimes", "somewhere", "still", "such", "system", "take", "ten", "than", "that", "the", "their", "them", "themselves", "then", "thence", "there", "thereafter", "thereby", "therefore", "therein", "thereupon", "these", "they", "thick", "thin", "third", "this", "those", "though", "three", "through", "throughout", "thru", "thus", "to", "together", "too", "top", "toward", "towards", "twelve", "twenty", "two", "un", "under", "until", "up", "upon", "us", "very", "via", "was", "we", "well", "were", "what", "whatever", "when", "whence", "whenever", "where", "whereafter", "whereas", "whereby", "wherein", "whereupon", "wherever", "whether", "which", "while", "whither", "who", "whoever", "whole", "whom", "whose", "why", "will", "with", "within", "without", "would", "yet", "you", "your", "yours", "yourself", "yourselves" };
@@ -88,6 +66,7 @@ bool isStop(string word){
 	}
 }
 
+// Structure used for 3-d array
 struct Node{
 	int pNum;
 	vector<string> wordList;
@@ -440,7 +419,8 @@ void step4(string& word, size_t startR2) {
 }
 
 /** 5
-* 
+* Checks the end of word for the char 'e'
+* pops 'e' off if its found
 */
 void step5(string& word, size_t startR1, size_t startR2) {
 	size_t size = word.size();
