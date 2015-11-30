@@ -523,25 +523,23 @@ void index() {
 							paragraphList[i]->nodeList[j]->pList.push_back(paragraphList[f]->pNum);
 						}
 					}
-				}flag = false;
+				}
+				flag = false;
 			}
 		}
 	}
 }
 
 void stemFile(){
-	for (int i = 0; i < paragraphList.size(); i++)
-	{
+	for (int i = 0; i < paragraphList.size(); i++) {
 		for (int j = 0; j < paragraphList[i]->nodeList.size(); j++){
 			stem(paragraphList[i]->nodeList[j]->word);
 		}
 	}
-
 }
 
 void printList(){
-	for (int i = 0; i < paragraphList.size(); i++)
-	{
+	for (int i = 0; i < paragraphList.size(); i++) 	{
 		cout << "Paragraph #" + to_string(paragraphList[i]->pNum) + ": " << endl;
 		for (int j = 0; j < paragraphList[i]->nodeList.size(); j++){
 			cout << paragraphList[i]->nodeList[j]->word << ": ";
@@ -553,9 +551,7 @@ void printList(){
 			}
 			cout << endl;
 		}
-
 	}
-
 }
 
 // This reads in the user query from stdin
@@ -573,9 +569,9 @@ void inputQuery(string s) {
 		query.push_back(m);
 	}
 	cout << "You input: ";
-	for (int i = 0; i < query.size(); i++){
+	for (int i = 0; i < query.size(); i++) {
 		cout << query[i];
-		if (query.size() - 1 != i){
+		if (query.size() - 1 != i) {
 			cout << ", ";
 		}
 	}
@@ -583,9 +579,7 @@ void inputQuery(string s) {
 }
 
 // This returns the amount of times that the query occurred in the doc
-void returnResults(){
-
-}
+void returnResults(){}
 
 // Main method
 int main() {
