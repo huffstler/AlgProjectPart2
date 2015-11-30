@@ -219,6 +219,7 @@ void trim(string& word) {
 	});
 }
 
+// Checks for special cases of words ["gener", "commun", "arsen"].
 size_t getStartR1(const string& word) {
 	// defined special cases
 	if (word.size() >= 5 && word[0] == 'g' && word[1] == 'e' && word[2] == 'n'
@@ -234,6 +235,7 @@ size_t getStartR1(const string& word) {
 	return firstNonVowelAfterVowel(word, 1);
 }
 
+// checks size of word and returns it if the same
 size_t getStartR2(const string& word, size_t startR1) {
 	if (startR1 == word.size())
 		return startR1;
