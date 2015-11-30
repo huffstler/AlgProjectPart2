@@ -140,12 +140,15 @@ void step1a(string *input){
 		else if (*input[end-1] != 's') { // second to last letter isn't an s. (ends in C's' where C is any consonant
 			end --;
 		}
+	}
+	
 	//check if it ends in "eed"
-	} else if (*input.substr(end-2, 2) == "eed") {
-		
+	if (*input.substr(end-2, 2) == "eed") {
+		//don't forget to check the m score
+		end --;
 	//check if it ends in "ed"
-	} else if () {
-		
+	} else if (*input.substr(end-1, 1) == "ed" || *input.substr(end-2, 2) == "ing" && stemvowel()) {
+		end = offset;
 	}
 }
 
