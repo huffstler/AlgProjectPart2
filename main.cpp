@@ -333,9 +333,11 @@ void step1C(string& word) {
 }
 
 /** 2
-* 
+* No focus on anything specific.
+* Look at the list of suffixes compared. to find out more
 */
 void step2(string& word, size_t startR1) {
+
 	static const vector<pair<string, string>> subs
 	= { { "ational", "ate" },
 		{ "tional", "tion" },
@@ -379,7 +381,8 @@ void step2(string& word, size_t startR1) {
 }
 
 /** 3
-* 
+* Same as Step2
+* No specific focus on certain suffixes
 */
 void step3(string& word, size_t startR1, size_t startR2) {
 	static const vector<pair<string, string>> subs
@@ -400,7 +403,9 @@ void step3(string& word, size_t startR1, size_t startR2) {
 }
 
 /** 4
-* 
+* Same as step 3 for the most part.
+* one deviation is that this makes sure that the word with the longest suffix is used, 
+* instead of using a shorter suffix, which would be wrong is certain cases
 */
 void step4(string& word, size_t startR2) {
 	static const vector<pair<string, string>> subs
@@ -430,7 +435,7 @@ void step4(string& word, size_t startR2) {
 		if (replaceIfExists(word, "ent", "", startR2))
 			return;
 
-	// short cut
+	// shortcut
 	replaceIfExists(word, "sion", "s", startR2 - 1) || replaceIfExists(word, "tion", "t", startR2 - 1);
 }
 
