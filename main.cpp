@@ -200,11 +200,11 @@ static int k,k0,j;       j is a general offset into the string
 void step1a(string *input){
 	//check if it ends with 's'
 	if (*input.back() == 's'){
-		if(*input.substr(end-3, 3) == "sses") { //ends in "sses"
+		if(*input.substr(end-3, 4) == "sses") { //ends in "sses"
 			end -= 2;
 		}
-		else if (*input.substr(end-2, 2) == "ies") { //ends in "ies"
-			*input.replace(substr(end-2, 2), "i");
+		else if (*input.substr(end-2, 3) == "ies") { //ends in "ies"
+			*input.replace(substr(end-2, 3), "i");
 		}
 		else if (*input[end-1] != 's') { // second to last letter isn't an s. (ends in C's' where C is any consonant
 			end --;
@@ -212,11 +212,11 @@ void step1a(string *input){
 	}
 	
 	//check if it ends in "eed"
-	if (*input.substr(end-2, 2) == "eed") {
+	if (*input.substr(end-2, 3) == "eed") {
 		//don't forget to check the m score
 		end --;
 	//check if it ends in "ed"
-	} else if (*input.substr(end-1, 1) == "ed" || *input.substr(end-2, 2) == "ing" && stemvowel()) {
+	} else if (*input.substr(end-1, 2) == "ed" || *input.substr(end-2, 3) == "ing" && stemvowel()) {
 		end = offset;
 	}
 }

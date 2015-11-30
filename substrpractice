@@ -1,11 +1,10 @@
 A S S E S
-
 0 1 2 3 4 
 
 start = 0
 end  = 5-1  = 4
 5 chars total
-substr = 4 - 3 = 1 to 1 + 3 = 4 (1 - 4)
+substr = 4 - 3 = 1 to 1 + 4 = 5 (1 - 5)
 
 now end -= 2 (end = 2)
 
