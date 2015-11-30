@@ -91,8 +91,13 @@ void populateMap() { // Done
 	}
 }
 
-bool findWord (string word){ 
-	auto has =  mymap.find(strhash(word));
+bool isStop (string word){ 
+	if(mymap.find(strhash(word)) != mymap.end()){
+		return true;
+	}
+	else{
+		return false;
+	}
 }
 
 // this removes stop words from the input (and the query)
@@ -101,17 +106,14 @@ void rmStopWords() {
 		auto iter = importedData.begin();
 		
         while(true) {
-            
-            if (mymap.find(strhash(*iter)) != mymap.end()){ // Means that the word is a stop word
-            	cout << "\"" <<*iter<< "\"" <<  " was found to be a stop word" << endl;
+            if (isStop(*iter)){ // Means that the word is a stop word
+            	cout << "\"" << *iter << "\"" <<  " IS a stop word" << endl;
             	//importedData.erase(iter); // remove the word from the list
             	++iter;
-            }
-            else{
-                cout << "\"" <<*iter<< "\"" << " is not a stop word" << endl;
+            } else {
+                cout << "\"" <<*iter<< "\"" << " is NOT a stop word" << endl;
                 ++iter;
             }
-
             if(iter == importedData.end()) {
             	cout << "at the end." << endl;
                 break;
