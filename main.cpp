@@ -197,7 +197,7 @@ void index() {
 /* static char * b;
 static int k,k0,j;       j is a general offset into the string 
 		k = end index k0 starting index, j is the size I guess */
-void step1a(string *input){
+void step1a(string *input){ //THIS IS NOT DONE. NEED TO WORK ON OTHER STUFF RIGHT NOW
 	//check if it ends with 's'
 	if (*input.back() == 's'){
 		if(*input.substr(end-3, 4) == "sses") { //ends in "sses"
@@ -206,18 +206,40 @@ void step1a(string *input){
 		else if (*input.substr(end-2, 3) == "ies") { //ends in "ies"
 			*input.replace(substr(end-2, 3), "i");
 		}
-		else if (*input[end-1] != 's') { // second to last letter isn't an s. (ends in C's' where C is any consonant
+		else if (*input.at(end-1) != 's') { // second to last letter isn't an s. (ends in C's' where C is any consonant
 			end --;
 		}
 	}
-	
 	//check if it ends in "eed"
 	if (*input.substr(end-2, 3) == "eed") {
 		//don't forget to check the m score
 		end --;
 	//check if it ends in "ed"
-	} else if (*input.substr(end-1, 2) == "ed" || *input.substr(end-2, 3) == "ing" && stemvowel()) {
-		end = offset;
+	} else if (*input.substr(end-1, 2) == "ed" || *input.substr(end-2, 3) == "ing") {
+		
+		if(*input.substr(end-1, 2) == "ed"){
+			end -=2; // maybe get ride of this? Used to be end = offset;
+		} else {
+			end-=3;
+		}
+				
+		if (*input.substr(end-1, 2) == "at") {
+			*input.replace(substr(end-1, 2), "ate");
+			
+		} else if (*input.substr(end-1, 2) == "bl") {
+			*input.replace(substr(end-1, 2), "ble");
+			
+		} else if (*input.substr(end-1, 2) == "iz") {
+			*input.replace(substr(end-1, 2), "ize");
+			
+		} else if () {
+			end --;
+			if (*input.at(end) == 'l' || *input.at(end) == 's' || *input.at(end) == 'z'){
+				end++;
+			}
+		} else if () {
+			
+		}
 	}
 }
 
