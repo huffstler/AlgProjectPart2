@@ -243,7 +243,7 @@ size_t getStartR2(const string& word, size_t startR1) {
 	return firstNonVowelAfterVowel(word, startR1 + 1);
 }
 
-//return the first consonant character that appears after a vowel, beginning from start
+// return the first consonant character that appears after a vowel, beginning from start
 size_t firstNonVowelAfterVowel(const string& word, size_t start) {
 	for (size_t i = start; i != 0 && i < word.size(); ++i) {
 		if (!isVowelY(word[i]) && isVowelY(word[i - 1]))
@@ -252,7 +252,7 @@ size_t firstNonVowelAfterVowel(const string& word, size_t start) {
 	return word.size();
 }
 
-// chahnges case of the char y depending on what appears before it, and when it appears in the string
+// changes case of the char y depending on what appears before it, and when it appears in the string
 void changeY(string& word) {
 	if (word[0] == 'y')
 		word[0] = 'Y';
@@ -263,13 +263,16 @@ void changeY(string& word) {
 	}
 }
 
-// catch words that are possesive || plural
+/** 0
+* catch words that are possesive || plural
+*/
 void step0(string& word) {
 	replaceIfExists(word, "'s'", "", 0) || replaceIfExists(word, "'s", "", 0) || replaceIfExists(word, "'", "", 0);
 }
 
 /** 1A
-*
+* Looks for past tense words. Checks for edge cases as well
+* Focus on suffix of: "Cs", "sses", "s", "ieC" (Where C is a variable character)
 */
 bool step1A(string& word) {
 	if (!replaceIfExists(word, "sses", "ss", 0)) {
@@ -294,7 +297,8 @@ bool step1A(string& word) {
 }
 
 /** 1B
-*
+* Looks for (paste-tense)adverbs.
+* Focus on suffix of: "eC", "ingCC","eed","edly" (Where C is a variable character)
 */
 void step1B(string& word, size_t startR1) {
 	bool exists = endsWith(word, "eedly") || endsWith(word, "eed");
@@ -318,7 +322,8 @@ void step1B(string& word, size_t startR1) {
 }
 
 /** 1C
-*
+* Looks for words ending in y
+* Swaps 'y' with 'i'
 */
 void step1C(string& word) {
 	size_t size = word.size();
@@ -328,7 +333,7 @@ void step1C(string& word) {
 }
 
 /** 2
-*
+* 
 */
 void step2(string& word, size_t startR1) {
 	static const vector<pair<string, string>> subs
@@ -374,7 +379,7 @@ void step2(string& word, size_t startR1) {
 }
 
 /** 3
-*
+* 
 */
 void step3(string& word, size_t startR1, size_t startR2) {
 	static const vector<pair<string, string>> subs
@@ -395,7 +400,7 @@ void step3(string& word, size_t startR1, size_t startR2) {
 }
 
 /** 4
-*
+* 
 */
 void step4(string& word, size_t startR2) {
 	static const vector<pair<string, string>> subs
@@ -430,7 +435,7 @@ void step4(string& word, size_t startR2) {
 }
 
 /** 5
-*
+* 
 */
 void step5(string& word, size_t startR1, size_t startR2) {
 	size_t size = word.size();
