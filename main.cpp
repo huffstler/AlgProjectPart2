@@ -87,11 +87,11 @@ bool isStop(string word){
 		return false;
 	}
 }
+
 struct Node{
 	int pNum;
 	vector<string> wordList;
 };
-
 
 // This reads in an input file from stdin
 // Reads past new lines now
@@ -100,7 +100,6 @@ void getFile(){
 	string tempStringP;
 	int listcount = 1;
 	vector<Node*> paragraphList;
-	//int count = 0;
 
 	while (getline(cin, tempStringP)){ //reads in a line from ideone
 		if (tempStringP == "/////"){
@@ -112,7 +111,6 @@ void getFile(){
 			listcount++;
 			cout << "New paragraph" << endl;
 		}
-
 
 		for (int i = 0; tempStringP[i] != '\0'; i++) {//lowercase everything
 			tempStringP[i] = tolower(tempStringP[i]);
@@ -126,10 +124,12 @@ void getFile(){
 			unsigned long len = tempStringP.size();
 
 			for (unsigned long i = 0; i < len; i++) {
+				
 				if (isdigit(tempStringP[i])) {
 					tempStringP.erase(i--, 1);
 					len = tempStringP.size();
 				}
+				
 				if (ispunct(tempStringP[i])) {
 					tempStringP.erase(i--, 1);
 					len = tempStringP.size();
@@ -140,7 +140,6 @@ void getFile(){
 			if (!isStop(tempStringP)) {
 				importedData.push_back(tempStringP);
 			}
-			//count++;
 		}
 	}
 
@@ -163,6 +162,7 @@ void getFile(){
 		}
 	}
 	*/
+	
 	for (int i = 0; i < paragraphList.size(); i++)
 	{	
 		cout << "New Paragraph: ";
@@ -171,9 +171,6 @@ void getFile(){
 		}
 		cout << endl;
 	}
-
-
-
 	//  printing function ends here
 }
 
@@ -185,7 +182,7 @@ void populateMap() { // Done
 
 // This stems the string that it is given
 void stem(string& word) {
-	// special case short words or sentence tags
+	// doesn't care about words smaller than 3 characters
 	if (word.size() <= 2)
 		return;
 	
@@ -214,8 +211,8 @@ void stem(string& word) {
 	return;
 }
 
+// Trims the word given to it. Trimming entails turning it to all lowercase, and removing non-alphanumeric characters
 void trim(string& word) {
-	
 	transform(word.begin(), word.end(), word.begin(), ::tolower);
 	remove_if(word.begin(), word.end(), [](char c){
 		return !((c >= 'a' && c <= 'z') || c == '\'');
@@ -223,7 +220,7 @@ void trim(string& word) {
 }
 
 size_t getStartR1(const string& word) {
-	// special cases
+	// defined special cases
 	if (word.size() >= 5 && word[0] == 'g' && word[1] == 'e' && word[2] == 'n'
 		&& word[3] == 'e' && word[4] == 'r')
 		return 5;
@@ -233,31 +230,27 @@ size_t getStartR1(const string& word) {
 	if (word.size() >= 5 && word[0] == 'a' && word[1] == 'r' && word[2] == 's'
 		&& word[3] == 'e' && word[4] == 'n')
 		return 5;
-
-	// general case
+	// If no special cases found, use standard function
 	return firstNonVowelAfterVowel(word, 1);
 }
 
-size_t getStartR2(const string& word, size_t startR1)
-{
+size_t getStartR2(const string& word, size_t startR1) {
 	if (startR1 == word.size())
 		return startR1;
 
 	return firstNonVowelAfterVowel(word, startR1 + 1);
 }
 
-size_t
-firstNonVowelAfterVowel(const string& word, size_t start)
-{
-	for (size_t i = start; i != 0 && i < word.size(); ++i)
-	{
+//return the first consonant character that appears after a vowel, beginning from start
+size_t firstNonVowelAfterVowel(const string& word, size_t start) {
+	for (size_t i = start; i != 0 && i < word.size(); ++i) {
 		if (!isVowelY(word[i]) && isVowelY(word[i - 1]))
 			return i + 1;
 	}
-
 	return word.size();
 }
 
+// chahnges case of the char y depending on what appears before it, and when it appears in the string
 void changeY(string& word) {
 	if (word[0] == 'y')
 		word[0] = 'Y';
@@ -268,28 +261,13 @@ void changeY(string& word) {
 	}
 }
 
-/**
-Step 0
-*/
+// catch words that are possesive || plural
 void step0(string& word) {
-	// short circuit the longest suffix
-	replaceIfExists(word, "'s'", "", 0) || replaceIfExists(word, "'s", "", 0)
-		|| replaceIfExists(word, "'", "", 0);
+	replaceIfExists(word, "'s'", "", 0) || replaceIfExists(word, "'s", "", 0) || replaceIfExists(word, "'", "", 0);
 }
 
-/**
-Step 1a:
-
-sses
-replace by ss
-ied   ies
-replace by i if preceded by more than one letter, otherwise by ie
-us   ss
-do nothing
-s
-delete if the preceding word part contains a vowel not immediately before
-the
-s (so gas and this retain the s, gaps and kiwis lose it)
+/** 1A
+*
 */
 bool step1A(string& word) {
 	if (!replaceIfExists(word, "sses", "ss", 0)) {
@@ -313,18 +291,8 @@ bool step1A(string& word) {
 		|| word == "exceed" || word == "succeed";
 }
 
-/**
-Step 1b:
-
-eed   eedly
-replace by ee if in R1
-
-ed   edly   ing   ingly
-delete if the preceding word part contains a vowel, and after the
-deletion:
-if the word ends at, bl or iz add e (so luxuriat -> luxuriate), or
-if the word ends with a double remove the last letter (so hopp -> hop), or
-if the word is short, add e (so hop -> hope)
+/** 1B
+*
 */
 void step1B(string& word, size_t startR1) {
 	bool exists = endsWith(word, "eedly") || endsWith(word, "eed");
@@ -333,14 +301,10 @@ void step1B(string& word, size_t startR1) {
 		replaceIfExists(word, "eedly", "ee", startR1) || replaceIfExists(word, "eed", "ee", startR1);
 	else {
 		size_t size = word.size();
-		bool deleted = (containsVowel(word, 0, size - 2)
-			&& replaceIfExists(word, "ed", "", 0))
-			|| (containsVowel(word, 0, size - 4)
-			&& replaceIfExists(word, "edly", "", 0))
-			|| (containsVowel(word, 0, size - 3)
-			&& replaceIfExists(word, "ing", "", 0))
-			|| (containsVowel(word, 0, size - 5)
-			&& replaceIfExists(word, "ingly", "", 0));
+		bool deleted = (containsVowel(word, 0, size - 2) && replaceIfExists(word, "ed", "", 0))
+			|| (containsVowel(word, 0, size - 4) && replaceIfExists(word, "edly", "", 0))
+			|| (containsVowel(word, 0, size - 3) && replaceIfExists(word, "ing", "", 0))
+			|| (containsVowel(word, 0, size - 5) && replaceIfExists(word, "ingly", "", 0));
 
 		if (deleted && (endsWith(word, "at") || endsWith(word, "bl") || endsWith(word, "iz")))
 			word.push_back('e');
@@ -351,11 +315,8 @@ void step1B(string& word, size_t startR1) {
 	}
 }
 
-/**
-Step 1c:
-
-Replace suffix y or Y by i if preceded by a non-vowel which is not the first
-letter of the word (so cry -> cri, by -> by, say -> say)
+/** 1C
+*
 */
 void step1C(string& word) {
 	size_t size = word.size();
@@ -364,27 +325,8 @@ void step1C(string& word) {
 			word[size - 1] = 'i';
 }
 
-/**
-Step 2:
-
-If found and in R1, perform the action indicated.
-
-tional:               replace by tion
-enci:                 replace by ence
-anci:                 replace by ance
-abli:                 replace by able
-entli:                replace by ent
-izer, ization:        replace by ize
-ational, ation, ator: replace by ate
-alism, aliti, alli:   replace by al
-fulness:              replace by ful
-ousli, ousness:       replace by ous
-iveness, iviti:       replace by ive
-biliti, bli:          replace by ble
-fulli:                replace by ful
-lessli:               replace by less
-ogi:                  replace by og if preceded by l
-li:                   delete if preceded by a valid li-ending
+/** 2
+*
 */
 void step2(string& word, size_t startR1) {
 	static const vector<pair<string, string>> subs
@@ -429,21 +371,12 @@ void step2(string& word, size_t startR1) {
 	}
 }
 
-/**
-Step 3:
-
-If found and in R1, perform the action indicated.
-
-ational:            replace by ate
-tional:             replace by tion
-alize:              replace by al
-icate, iciti, ical: replace by ic
-ful, ness:          delete
-ative:              delete if in R2
+/** 3
+*
 */
 void step3(string& word, size_t startR1, size_t startR2) {
 	static const vector<pair<string, string>> subs
-		= { { "ational", "ate" },
+	= { { "ational", "ate" },
 		{ "tional", "tion" },
 		{ "alize", "al" },
 		{ "icate", "ic" },
@@ -459,20 +392,12 @@ void step3(string& word, size_t startR1, size_t startR2) {
 	replaceIfExists(word, "ative", "", startR2);
 }
 
-/**
-Step 4:
-
-If found and in R2, perform the action indicated.
-
-al ance ence er ic able ible ant ement ment ent ism ate
-iti ous ive ize
-delete
-ion
-delete if preceded by s or t
+/** 4
+*
 */
 void step4(string& word, size_t startR2) {
 	static const vector<pair<string, string>> subs
-		= { { "al", "" },
+	= { { "al", "" },
 		{ "ance", "" },
 		{ "ence", "" },
 		{ "er", "" },
@@ -493,43 +418,37 @@ void step4(string& word, size_t startR2) {
 		if (replaceIfExists(word, sub.first, sub.second, startR2))
 			return;
 
-	// make sure we only choose the longest suffix
+	// ensures word with longest tail is used
 	if (!endsWith(word, "ement") && !endsWith(word, "ment"))
 		if (replaceIfExists(word, "ent", "", startR2))
 			return;
 
-	// short circuit
-	replaceIfExists(word, "sion", "s", startR2 - 1)
-		|| replaceIfExists(word, "tion", "t", startR2 - 1);
+	// short cut
+	replaceIfExists(word, "sion", "s", startR2 - 1) || replaceIfExists(word, "tion", "t", startR2 - 1);
 }
 
-/**
-Step 5:
-
-e     delete if in R2, or in R1 and not preceded by a short syllable
-l     delete if in R2 and preceded by l
+/** 5
+*
 */
 void step5(string& word, size_t startR1, size_t startR2) {
 	size_t size = word.size();
+	
 	if (word[size - 1] == 'e') {
+		
 		if (size - 1 >= startR2)
 			word.pop_back();
+		
 		else if (size - 1 >= startR1 && !isShort(word.substr(0, size - 1)))
 			word.pop_back();
+	
 	} else if (word[word.size() - 1] == 'l') {
+		
 		if (word.size() - 1 >= startR2 && word[word.size() - 2] == 'l')
 			word.pop_back();
 	}
 }
 
-/**
-* Determines whether a word ends in a short syllable.
-* Define a short syllable in a word as either
-*
-* (a) a vowel followed by a non-vowel other than w, x or Y and preceded by a
-*		non-vowel
-* (b) a vowel at the beginning of the word followed by a non-vowel.
-*/
+//Checks word for low amount of syllables
 bool isShort(const string& word) {
 	size_t size = word.size();
 
@@ -541,18 +460,23 @@ bool isShort(const string& word) {
 	}
 	return size == 2 && isVowelY(word[0]) && !isVowelY(word[1]);
 }
+
+//checks if the character is the vowel version of y
 bool isVowelY(char c) {
 	return c == 'e' || c == 'a' || c == 'i' || c == 'o' || c == 'u' || c == 'y';
 }
+
+//checks if given character is a vowel
 bool isVowel(char c) {
 	return c == 'e' || c == 'a' || c == 'i' || c == 'o' || c == 'u';
 }
 
+//checks if word ends with the given string, str
 bool endsWith(const string& word,const string& str) {
-	return word.size() >= str.size()
-		&& equal(word.begin() + (word.size() - str.size()), word.end(),
-		str.begin());
+	return word.size() >= str.size() && equal(word.begin() + (word.size() - str.size()), word.end(), str.begin());
 }
+
+//checks if given word ends with double of the chars listed [b,d,f,g,m,n,p,r,t]
 bool endsInDouble(const string& word) {
 	if (word.size() >= 2) {
 		char a = word[word.size() - 1];
@@ -562,10 +486,10 @@ bool endsInDouble(const string& word) {
 			return a == 'b' || a == 'd' || a == 'f' || a == 'g' || a == 'm'
 			|| a == 'n' || a == 'p' || a == 'r' || a == 't';
 	}
-
 	return false;
 }
 
+//replaces word with replacement beginning from start if word exists
 bool replaceIfExists(string& word, const string& suffix, const string& replacement, size_t start) {
 	size_t idx = word.size() - suffix.size();
 	if (idx < start)
@@ -577,11 +501,14 @@ bool replaceIfExists(string& word, const string& suffix, const string& replaceme
 	}
 	return false;
 }
+
+//checks some fringe cases. Words ending in 'li'
 bool ValidEndsWithLI(char c) {
 	return c == 'c' || c == 'd' || c == 'e' || c == 'g' || c == 'h'
 		|| c == 'k' || c == 'm' || c == 'n' || c == 'r' || c == 't';
 }
 
+//returns true if word contains a vowel. False otherwise
 bool containsVowel(const string& word, size_t start, size_t end) {
 	if (end <= word.size()) {
 		for (size_t i = start; i < end; ++i)
@@ -674,7 +601,8 @@ cout << ", ";
 }
 */
 
-// This reads in the user query from stdin
+// This reads in the user query from stdin. 
+// Not really, we hard code in queries to check and make sure our stuff works
 void getQuery() {
 
 }
@@ -686,11 +614,11 @@ void returnResults(){
 
 // Main method
 int main() {
-	string godly = "deformities";
-	stem(godly);
-	cout << godly << endl;
+	//string godly = "deformities";
+	//stem(godly);
+	//cout << godly << endl;
 	//system("pause");
-	//populateMap();// puts the stop words in a map for quick access
-	//getFile(); // reads std for the file to be input.
+	populateMap();// puts the stop words in a map for quick access
+	getFile(); // reads std for the file to be input.
 	//index();
 }
