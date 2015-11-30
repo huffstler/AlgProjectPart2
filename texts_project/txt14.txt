@@ -1,0 +1,24 @@
+Fish do not represent a monophyletic group, and therefore the "evolution of fish" is not studied as a single event.[5]
+
+Early fish from the fossil record are represented by a group of small, jawless, armored fish known as Ostracoderms. Jawless fish lineages are mostly extinct. An extant clade, the Lampreys may approximate ancient pre-jawed fish. The first jaws are found in Placodermi fossils. The diversity of jawed vertebrates may indicate the evolutionary advantage of a jawed mouth. It is unclear if the advantage of a hinged jaw is greater biting force, improved respiration, or a combination of factors.
+
+Fish may have evolved from a creature similar to a coral-like Sea squirt, whose larvae resemble primitive fish in important ways. The first ancestors of fish may have kept the larval form into adulthood (as some sea squirts do today), although perhaps the reverse is the case.
+Taxonomy
+
+Fish are a paraphyletic group: that is, any clade containing all fish also contains the tetrapods, which are not fish. For this reason, groups such as the "Class Pisces" seen in older reference works are no longer used in formal classifications.
+
+Traditional classification divide fish into three extant classes, and with extinct forms sometimes classified within the tree, sometimes as their own classes:[6][7]
+
+    Class Agnatha (jawless fish)
+        Subclass Cyclostomata (hagfish and lampreys)
+        Subclass Ostracodermi (armoured jawless fish) †
+    Class Chondrichthyes (cartilaginous fish)
+        Subclass Elasmobranchii (sharks and rays)
+        Subclass Holocephali (chimaeras and extinct relatives)
+    Class Placodermi (armoured fish) †
+    Class Acanthodii ("spiny sharks", sometimes classified under bony fishes)†
+    Class Osteichthyes (bony fish)
+        Subclass Actinopterygii (ray finned fishes)
+        Subclass Sarcopterygii (fleshy finned fishes, ancestors of tetrapods)
+
+The above scheme is the one most commonly encountered in non-specialist and general works. Many of the above groups are paraphyletic, in that they have given rise to successive groups: Agnathans are ancestral to Chondrichthyes, who again have given rise to Acanthodiians, the ancestors of Osteichthyes. With the arrival of phylogenetic nomenclature, the fishes has been split up into a more detailed scheme, with the following major groups:
