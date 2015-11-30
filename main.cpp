@@ -30,7 +30,135 @@ hash<string> strhash;
 
 vector<string> stopWords = { "a", "about", "above", "across", "after", "afterwards", "again", "against", "all", "almost", "alone", "along", "already", "also", "although", "always", "am", "among", "amongst", "amoungst", "amount", "an", "and", "another", "any", "anyhow", "anyone", "anything", "anyway", "anywhere", "are", "around", "as", "at", "back", "be", "became", "because", "become", "becomes", "becoming", "been", "before", "beforehand", "behind", "being", "below", "beside", "besides", "between", "beyond", "bill", "both", "bottom", "but", "by", "call", "can", "cannot", "cant", "co", "computer", "con", "could", "couldnt", "cry", "de", "describe", "detail", "do", "done", "down", "due", "during", "each", "eg", "eight", "either", "eleven", "else", "elsewhere", "empty", "enough", "etc", "even", "ever", "every", "everyone", "everything", "everywhere", "except", "few", "fifteen", "fify", "fill", "find", "fire", "first", "five", "for", "former", "formerly", "forty", "found", "four", "from", "front", "full", "further", "get", "give", "go", "had", "has", "hasnt", "have", "he", "hence", "her", "here", "hereafter", "hereby", "herein", "hereupon", "hers", "him", "his", "how", "however", "hundred", "i", "ie", "if", "in", "inc", "indeed", "interest", "into", "is", "it", "its", "keep", "last", "latter", "latterly", "least", "less", "ltd", "made", "many", "may", "me", "meanwhile", "might", "mill", "mine", "more", "moreover", "most", "mostly", "move", "much", "must", "my", "name", "namely", "neither", "never", "nevertheless", "next", "nine", "no", "nobody", "none", "noone", "nor", "not", "nothing", "now", "nowhere", "of", "off", "often", "on", "once", "one", "only", "onto", "or", "other", "others", "otherwise", "our", "ours", "ourselves", "out", "over", "own", "part", "per", "perhaps", "please", "put", "rather", "re", "same", "see", "seem", "seemed", "seeming", "seems", "serious", "several", "she", "should", "show", "side", "since", "sincere", "six", "sixty", "so", "some", "somehow", "someone", "something", "sometime", "sometimes", "somewhere", "still", "such", "system", "take", "ten", "than", "that", "the", "their", "them", "themselves", "then", "thence", "there", "thereafter", "thereby", "therefore", "therein", "thereupon", "these", "they", "thick", "thin", "third", "this", "those", "though", "three", "through", "throughout", "thru", "thus", "to", "together", "too", "top", "toward", "towards", "twelve", "twenty", "two", "un", "under", "until", "up", "upon", "us", "very", "via", "was", "we", "well", "were", "what", "whatever", "when", "whence", "whenever", "where", "whereafter", "whereas", "whereby", "wherein", "whereupon", "wherever", "whether", "which", "while", "whither", "who", "whoever", "whole", "whom", "whose", "why", "will", "with", "within", "without", "would", "yet", "you", "your", "yours", "yourself", "yourselves" };
 
-int frnt = 0 , back, off;
+int back;
+
+void step1a(string *input){ //THIS IS NOT DONE. NEED TO WORK ON OTHER STUFF RIGHT NOW
+	//check if it ends with 's'
+	if (input->back() == 's'){
+		//substr [i1,i2) = [1,5) = 1-4
+		if(input->substr(back-3, 4) == "sses") { //ends in "sses"
+			back -= 2;
+		}
+		else if (input->substr(back-2, 3) == "ies") { //ends in "ies"
+			input->replace(substr(back-2, 3), "i");
+		}
+		else if (input->at(back-1) != 's') { // second to last letter isn't an s. (ends in C's' where C is any consonant
+			back --;
+		}
+	}
+	//check if it ends in "eed"
+	if (input->substr(back-2, 3) == "eed") {
+		//don't forget to check the m score
+		back --;
+	//check if it ends in "ed"
+	} else if (input->substr(back-1, 2) == "ed" || input->substr(back-2, 3) == "ing") {
+		
+		if(input->substr(back-1, 2) == "ed"){
+			back -=2; // maybe get ride of this? Used to be back = offset;
+		} else {
+			back-=3;
+		}
+				
+		if (input->substr(back-1, 2) == "at") {
+			input->replace(substr(back-1, 2), "ate");
+			
+		} else if (input->substr(back-1, 2) == "bl") {
+			input->replace(substr(back-1, 2), "ble");
+			
+		} else if (input->substr(back-1, 2) == "iz") {
+			input->replace(substr(back-1, 2), "ize");
+		}
+		// } else if () {
+		// 	back --;
+		// 	if (input->at(back) == 'l' || input->at(back) == 's' || input->at(back) == 'z'){
+		// 		back++;
+		// 	}
+		// } else if () {
+			
+		// }
+	}
+}
+
+void step1b (string *input) {
+	if(input->back() == 'y') {
+		input->back() = 'i';
+	}
+}
+
+void step2 (string *input) {
+	switch (input->at(back-1)){
+		case 'a':
+			if (input->substr(back-6, 7) == "ational") {input->replace(substr(back-6, 7), "ate"); break;}
+			if (input->substr(back-5, 6) == "tional") {input->replace(substr(back-5, 6), "tion"); break;}
+			break;
+		case 'c':
+			if (input->substr(back-3, 4) == "enci") {input->replace(substr(back-3, 4), "ence"); break;}
+			if (input->substr(back-3, 4) == "anci") {input->replace(substr(back-3, 4), "ance"); break;}
+			break;
+		case 'e':
+			if (input->substr(back-3, 4) == "izer") {input->replace(substr(back-3, 4), "ize"); break;}
+			break;
+		case 'l':
+			if (input->substr(back-2, 3) == "bli") {input->replace(substr(back-2, 3), "ble"); break;}
+			if (input->substr(back-3, 4) == "alli") {input->replace(substr(back-3, 4), "al"); break;}
+			if (input->substr(back-4, 5) == "entli") {input->replace(substr(back-4, 5), "ent"); break;}
+			if (input->substr(back-2, 3) == "eli") {input->replace(substr(back-2, 3), "e"); break;}
+			if (input->substr(back-4, 5) == "ousli") {input->replace(substr(back-4, 5), "ous"); break;}
+			break;
+		case 'o':
+			if (input->substr(back-6, 7) == "ization") {input->replace(substr(back-6, 7), "ize"); break;}
+			if (input->substr(back-4, 5) == "ation") {input->replace(substr(back-4, 5), "ate"); break;}
+			if (input->substr(back-3, 4) == "ator") {input->replace(substr(back-3, 4), "ate"); break;}
+			break;
+		case 's':
+			if (input->substr(back-4, 5) == "alism") {input->replace(substr(back-4, 5), "al"); break;}
+			if (input->substr(back-6, 7) == "iveness") {input->replace(substr(back-6, 7), "ive"); break;}
+			if (input->substr(back-6, 7) == "fulness") {input->replace(substr(back-6, 7), "ful"); break;}
+			if (input->substr(back-6, 7) == "ousness") {input->replace(substr(back-6, 7), "ous"); break;}
+			break;
+		case 't':
+			if (input->substr(back-4, 5) == "aliti") {input->replace(substr(back-4, 5), "al"); break;}
+			if (input->substr(back-4, 5) == "iviti") {input->replace(substr(back-4, 5), "ive"); break;}
+			if (input->substr(back-5, 6) == "biliti") {input->replace(substr(back-5, 6) "ble"); break;}
+		//case 'g':
+	}
+}
+
+void step3 (string *input) {
+	switch(input->back()){
+		case 'e':
+			if (input->substr(back-4, 5) == "icate") {input->replace(substr(back-4, 5), "ic"); break;}
+			if (input->substr(back-4, 5) == "ative") {input->replace(substr(back-4, 5), ""); break;}
+			if (input->substr(back-4, 5) == "alize") {input->replace(substr(back-4, 5), "al"); break;}
+			break;
+		case 'i':
+			if (input->substr(back-4, 5) == "iciti") {input->replace(substr(back-4, 5), "ic"); break;}
+			break;
+		case 'l':
+			if (input->substr(back-3, 4) == "ical") {input->replace(substr(back-3, 4), "ic"); break;}
+			if (input->substr(back-2, 3) == "ful") {input->replace(substr(back-2, 3), ""); break;}
+			break;
+		case 's':
+			if (input->substr(back-3, 4) == "ness") {input->replace(substr(back-3, 4), ""); break;}
+			break;
+	}
+}
+
+//void step4 (string *input) {}
+	
+//void step5 (string *input) {}
+
+// This stems the string that it is given
+void stem(string *input){
+	back = input->length() - 1;
+	
+	if (back + 1 > 2) { //runs if the word is larger than 2 chars
+		//step1a(*input);
+		//step1b(*input);
+		step2(input);
+		step3(input);
+	}
+}
 
 //Is it a stop word?
 bool isStop(string word){
@@ -87,7 +215,8 @@ void getFile(){
 			auto iter = importedData.begin();
 
 			while (true) {
-				cout << *iter;
+				//cout << *iter;
+				stem(iter);
 				++iter;
 
 				if (iter == importedData.end()) {
@@ -109,30 +238,18 @@ void populateMap() { // Done
 	}
 }
 
-// This stems the string that it is given
-void stem(string *input){
-	back = *input.length() - 1;
-	off = back - frnt; // kinda stupid, I know
-	
-	if (back + 1 > 2) { //runs if the word is larger than 2 chars
-		step1a(*input);
-		step1b(*input);
-		step2(*input);
-	}
-}
-
 // this indexes the remaining words from the given input
-void index() {
+//void index() {
 	//idea of how to do this. Make index by paragraph instead of document
 	//iterate through list of keywords until a new line is hit (has to be added in primary iteration)
 	//push all these words onto a list named paragraph[i] (where i is the paragraph number)
 	//when a new paragraph starts, make a new list adding in all words
-	//do so until the end, having a seperate list of keywords for each paragraph
+	//do so until the back, having a seperate list of keywords for each paragraph
 	//for each keyword in orignal list (inputeddata) check if it is in each paragraph
 	//cout keyword: "appears in" (whichever lists it is found in)
 
 
-	list<string> Data;
+	/* list<string> Data;
 	list<list<string>> Pgraphs;
 	string tempStringP;
 	int Pnumber = 0; //current paragraph number
@@ -171,25 +288,25 @@ void index() {
 
 			/*
 			//printing the lists
-			for(list<list<string>>::iterator iter = Pgraphs.begin(); iter!= Pgraphs.end(); iter++){
-			for(list<string>::iterator iter2 = iter->begin(); iter2!= iter->end(); iter2++){
+			for(list<list<string>>::iterator iter = Pgraphs.begin(); iter!= Pgraphs.back(); iter++){
+			for(list<string>::iterator iter2 = iter->begin(); iter2!= iter->back(); iter2++){
 
 			cout << Pnumber << "\n ";
 			cout << *iter2;
 
-			if(iter2 == importedData.end()) {
+			if(iter2 == importedData.back()) {
 			break;
 			} else {
 			cout << ", ";
 			}
 			}
 			}
-			*/
+			
 
 			list<list<string>>::iterator row;
 			list<string>::iterator col;
-			for (row = Pgraphs.begin(); row != Pgraphs.end(); row++){
-				for (col = row->begin(); col != row->end(); col++){
+			for (row = Pgraphs.begin(); row != Pgraphs.back(); row++){
+				for (col = row->begin(); col != row->back(); col++){
 
 				}
 			}
@@ -199,126 +316,7 @@ void index() {
 	}
 
 
-}
-
-/* static char * b;
-static int k,k0,j;       j is a general offset into the string 
-		k = end index k0 starting index, j is the size I guess */
-void step1a(string *input){ //THIS IS NOT DONE. NEED TO WORK ON OTHER STUFF RIGHT NOW
-	//check if it ends with 's'
-	if (*input.back() == 's'){
-		//substr [i1,i2) = [1,5) = 1-4
-		if(*input.substr(end-3, 4) == "sses") { //ends in "sses"
-			end -= 2;
-		}
-		else if (*input.substr(end-2, 3) == "ies") { //ends in "ies"
-			*input.replace(substr(end-2, 3), "i");
-		}
-		else if (*input.at(end-1) != 's') { // second to last letter isn't an s. (ends in C's' where C is any consonant
-			end --;
-		}
-	}
-	//check if it ends in "eed"
-	if (*input.substr(end-2, 3) == "eed") {
-		//don't forget to check the m score
-		end --;
-	//check if it ends in "ed"
-	} else if (*input.substr(end-1, 2) == "ed" || *input.substr(end-2, 3) == "ing") {
-		
-		if(*input.substr(end-1, 2) == "ed"){
-			end -=2; // maybe get ride of this? Used to be end = offset;
-		} else {
-			end-=3;
-		}
-				
-		if (*input.substr(end-1, 2) == "at") {
-			*input.replace(substr(end-1, 2), "ate");
-			
-		} else if (*input.substr(end-1, 2) == "bl") {
-			*input.replace(substr(end-1, 2), "ble");
-			
-		} else if (*input.substr(end-1, 2) == "iz") {
-			*input.replace(substr(end-1, 2), "ize");
-			
-		} else if () {
-			end --;
-			if (*input.at(end) == 'l' || *input.at(end) == 's' || *input.at(end) == 'z'){
-				end++;
-			}
-		} else if () {
-			
-		}
-	}
-}
-
-void step1b (string *input) {
-	if(*input.back() == "y") {
-		*input.back() = 'i';
-	}
-}
-
-void step2 (string *input) {
-	switch (*input.at(end-1)){
-		case 'a':
-			if (*input.substr(end-6, 7) == "ational") {*input.replace(substr(end-6, 7), "ate"); break;}
-			if (*input.substr(end-5, 6) == "tional") {*input.replace(substr(end-5, 6), "tion"); break;}
-			break;
-		case 'c':
-			if (*input.substr(end-3, 4) == "enci") {*input.replace(substr(end-3, 4), "ence"); break;}
-			if (*input.substr(end-3, 4) == "anci") {*input.replace(substr(end-3, 4), "ance"); break;}
-			break;
-		case 'e':
-			if (*input.substr(end-3, 4) == "izer") {*input.replace(substr(end-3, 4), "ize"); break;}
-			break;
-		case 'l':
-			if (*input.substr(end-2, 3) == "bli") {*input.replace(substr(end-2, 3), "ble"); break;}
-			if (*input.substr(end-3, 4) == "alli") {*input.replace(substr(end-3, 4), "al"); break;}
-			if (*input.substr(end-4, 5) == "entli") {*input.replace(substr(end-4, 5), "ent"); break;}
-			if (*input.substr(end-2, 3) == "eli") {*input.replace(substr(end-2, 3), "e"); break;}
-			if (*input.substr(end-4, 5) == "ousli") {*input.replace(substr(end-4, 5), "ous"); break;}
-			break;
-		case 'o':
-			if (*input.substr(end-6, 7) == "ization") {*input.replace(substr(end-6, 7), "ize"); break;}
-			if (*input.substr(end-4, 5) == "ation") {*input.replace(substr(end-4, 5), "ate"); break;}
-			if (*input.substr(end-3, 4) == "ator") {*input.replace(substr(end-3, 4), "ate"); break;}
-			break;
-		case 's':
-			if (*input.substr(end-4, 5) == "alism") {*input.replace(substr(end-4, 5), "al"); break;}
-			if (*input.substr(end-6, 7) == "iveness") {*input.replace(substr(end-6, 7), "ive"); break;}
-			if (*input.substr(end-6, 7) == "fulness") {*input.replace(substr(end-6, 7), "ful"); break;}
-			if (*input.substr(end-6, 7) == "ousness") {*input.replace(substr(end-6, 7), "ous"); break;}
-			break;
-		case 't':
-			if (*input.substr(end-4, 5) == "aliti") {*input.replace(substr(end-4, 5), "al"); break;}
-			if (*input.substr(end-4, 5) == "iviti") {*input.replace(substr(end-4, 5), "ive"); break;}
-			if (*input.substr(end-5, 6) == "biliti") {*input.replace(substr(end-5, 6) "ble"); break;}
-		//case 'g':
-	}
-}
-
-void step3 (string *input) {
-	switch(*input.end()){
-		case 'e':
-			if (*input.substr(end-4, 5) == "icate") {*input.replace(substr(end-4, 5), "ic"); break;}
-			if (*input.substr(end-4, 5) == "ative") {*input.replace(substr(end-4, 5), ""); break;}
-			if (*input.substr(end-4, 5) == "alize") {*input.replace(substr(end-4, 5), "al"); break;}
-			break;
-		case 'i':
-			if (*input.substr(end-4, 5) == "iciti") {*input.replace(substr(end-4, 5), "ic"); break;}
-			break;
-		case 'l':
-			if (*input.substr(end-3, 4) == "ical") {*input.replace(substr(end-3, 4), "ic"); break;}
-			if (*input.substr(end-2, 3) == "ful") {*input.replace(substr(end-2, 3), ""); break;}
-			break;
-		case 's':
-			if (*input.substr(end-3, 4) == "ness") {*input.replace(substr(end-3, 4), ""); break;}
-			break;
-	}
-}
-
-void step4 (string *input) {}
-	
-void step5 (string *input) {}
+} */
 
 // This reads in the user query from stdin
 void getQuery() {
@@ -335,6 +333,6 @@ int main() {
 
 	populateMap(); // puts the stop words in a map for quick access
 	//  getFile(); // reads std for the file to be input.
-	index();
+	//index();
 
 }
