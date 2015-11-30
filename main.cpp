@@ -523,25 +523,23 @@ void index() {
 							paragraphList[i]->nodeList[j]->pList.push_back(paragraphList[f]->pNum);
 						}
 					}
-				}flag = false;
+				}
+				flag = false;
 			}
 		}
 	}
 }
 
 void stemFile(){
-	for (int i = 0; i < paragraphList.size(); i++)
-	{
+	for (int i = 0; i < paragraphList.size(); i++) {
 		for (int j = 0; j < paragraphList[i]->nodeList.size(); j++){
 			stem(paragraphList[i]->nodeList[j]->word);
 		}
 	}
-
 }
 
 void printList(){
-	for (int i = 0; i < paragraphList.size(); i++)
-	{
+	for (int i = 0; i < paragraphList.size(); i++) {
 		cout << "Paragraph #" + to_string(paragraphList[i]->pNum) + ": " << endl;
 		for (int j = 0; j < paragraphList[i]->nodeList.size(); j++){
 			cout << paragraphList[i]->nodeList[j]->word << ": ";
@@ -569,8 +567,6 @@ void inputQuery(string s) {
 	remove stop words
 	stem words	
 	*/
-
-	
 }
 
 // This returns the amount of times that the query occurred in the doc
