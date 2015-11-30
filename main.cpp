@@ -50,7 +50,7 @@ bool isVowelY(char c);
 bool endsWith(const string& word, const string& str);
 bool endsInDouble(const string& word);
 bool replaceIfExists(string& word, const string& suffix,
-const string& replacement, size_t start);
+	const string& replacement, size_t start);
 bool ValidEndsWithLI(char c);
 bool containsVowel(const string& word, size_t start, size_t end);
 
@@ -65,31 +65,35 @@ bool isStop(string word){
 		return false;
 	}
 }
+struct strNode{
+	string word;
+	vector<int> pList;
+};
 
-// Structure used for 3-d array
 struct Node{
 	int pNum;
-	vector<string> wordList;
+	vector<strNode*> nodeList;
 };
+
 
 // This reads in an input file from stdin
 // Reads past new lines now
+vector<Node*> paragraphList;
 void getFile(){
-	vector<string> importedData;
+	vector<strNode*> importedData;
 	string tempStringP;
 	int listcount = 1;
-	vector<Node*> paragraphList;
 
 	while (getline(cin, tempStringP)){ //reads in a line from ideone
 		if (tempStringP == "/////"){
 			Node *p = new Node;
 			p->pNum = listcount;
-			p->wordList = importedData;
+			p->nodeList = importedData;
 			paragraphList.push_back(p);
 			importedData.clear();
 			listcount++;
-			cout << "New paragraph" << endl;
 		}
+
 
 		for (int i = 0; tempStringP[i] != '\0'; i++) {//lowercase everything
 			tempStringP[i] = tolower(tempStringP[i]);
@@ -103,12 +107,10 @@ void getFile(){
 			unsigned long len = tempStringP.size();
 
 			for (unsigned long i = 0; i < len; i++) {
-				
 				if (isdigit(tempStringP[i])) {
 					tempStringP.erase(i--, 1);
 					len = tempStringP.size();
 				}
-				
 				if (ispunct(tempStringP[i])) {
 					tempStringP.erase(i--, 1);
 					len = tempStringP.size();
@@ -116,40 +118,25 @@ void getFile(){
 			}
 
 			//push string with removed punctuation onto the imported data list
-			if (!isStop(tempStringP)) {
-				importedData.push_back(tempStringP);
+			if (!isStop(tempStringP) && tempStringP!="") {
+				strNode *s = new strNode;
+				s->pList.push_back(listcount);
+				s->word = tempStringP;
+				importedData.push_back(s);
 			}
 		}
 	}
-
-	//This prints my imported data so I can see that it is correct
-	//comment in and out as needed
-	/*
-	if (!importedData.empty()) {
-		auto iter = importedData.begin();
-
-		while (true) {
-			cout << *iter;
-			++iter;
-
-			if (iter == importedData.end()) {
-				break;
-			}
-			else {
-				cout << ", ";
-			}
-		}
+	/*	for (int i = 0; i < paragraphList.size(); i++)
+	{
+	cout << "New Paragraph: ";
+	for (int j = 0; j < paragraphList[i]->nodeList.size(); j++){
+	cout << paragraphList[i]->nodeList[j]->word << " -> ";
 	}
+	cout << endl;
+	}
+
 	*/
-	
-	for (int i = 0; i < paragraphList.size(); i++)
-	{	
-		cout << "New Paragraph: ";
-		for (int j = 0; j < paragraphList[i]->wordList.size(); j++){
-			cout << paragraphList[i]->wordList[j]<< " -> ";
-		}
-		cout << endl;
-	}
+
 	//  printing function ends here
 }
 
@@ -164,10 +151,10 @@ void stem(string& word) {
 	// doesn't care about words smaller than 3 characters
 	if (word.size() <= 2)
 		return;
-	
+
 	if (word[0] == '\'')
 		word = word.substr(1, word.size() - 1);
-	
+
 	changeY(word);
 	size_t startR1 = getStartR1(word);
 	size_t startR2 = getStartR2(word, startR1);
@@ -263,7 +250,8 @@ bool step1A(string& word) {
 				word.pop_back();
 				word.pop_back();
 			}
-		} else if (endsWith(word, "s") && !endsWith(word, "us") && !endsWith(word, "ss")) {
+		}
+		else if (endsWith(word, "s") && !endsWith(word, "us") && !endsWith(word, "ss")) {
 			if (word.size() > 2 && containsVowel(word, 0, word.size() - 2))
 				word.pop_back();
 		}
@@ -318,7 +306,7 @@ void step1C(string& word) {
 void step2(string& word, size_t startR1) {
 
 	static const vector<pair<string, string>> subs
-	= { { "ational", "ate" },
+		= { { "ational", "ate" },
 		{ "tional", "tion" },
 		{ "enci", "ence" },
 		{ "anci", "ance" },
@@ -365,7 +353,7 @@ void step2(string& word, size_t startR1) {
 */
 void step3(string& word, size_t startR1, size_t startR2) {
 	static const vector<pair<string, string>> subs
-	= { { "ational", "ate" },
+		= { { "ational", "ate" },
 		{ "tional", "tion" },
 		{ "alize", "al" },
 		{ "icate", "ic" },
@@ -383,12 +371,12 @@ void step3(string& word, size_t startR1, size_t startR2) {
 
 /** 4
 * Same as step 3 for the most part.
-* one deviation is that this makes sure that the word with the longest suffix is used, 
+* one deviation is that this makes sure that the word with the longest suffix is used,
 * instead of using a shorter suffix, which would be wrong is certain cases
 */
 void step4(string& word, size_t startR2) {
 	static const vector<pair<string, string>> subs
-	= { { "al", "" },
+		= { { "al", "" },
 		{ "ance", "" },
 		{ "ence", "" },
 		{ "er", "" },
@@ -424,17 +412,18 @@ void step4(string& word, size_t startR2) {
 */
 void step5(string& word, size_t startR1, size_t startR2) {
 	size_t size = word.size();
-	
+
 	if (word[size - 1] == 'e') {
-		
+
 		if (size - 1 >= startR2)
 			word.pop_back();
-		
+
 		else if (size - 1 >= startR1 && !isShort(word.substr(0, size - 1)))
 			word.pop_back();
-	
-	} else if (word[word.size() - 1] == 'l') {
-		
+
+	}
+	else if (word[word.size() - 1] == 'l') {
+
 		if (word.size() - 1 >= startR2 && word[word.size() - 2] == 'l')
 			word.pop_back();
 	}
@@ -464,7 +453,7 @@ bool isVowel(char c) {
 }
 
 //checks if word ends with the given string, str
-bool endsWith(const string& word,const string& str) {
+bool endsWith(const string& word, const string& str) {
 	return word.size() >= str.size() && equal(word.begin() + (word.size() - str.size()), word.end(), str.begin());
 }
 
@@ -519,82 +508,59 @@ void index() {
 	//do so until the end, having a seperate list of keywords for each paragraph
 	//for each keyword in orignal list (inputeddata) check if it is in each paragraph
 	//cout keyword: "appears in" (whichever lists it is found in)
-
-
-	vector<string> Data;
-	vector<vector<string>> Pgraphs;
-	string tempStringP;
-	int Pnumber = 0; //current paragraph number
-	//while (getline(cin, tempStringP)){
-	while (getline(cin, tempStringP, '\n')){ //reads in a line from ideone
-
-		// cout << Pnumber << " ";
-
-		for (int i = 0; tempStringP[i] != '\0'; i++) {//lowercase everything
-			tempStringP[i] = tolower(tempStringP[i]);
+	bool flag = false;
+	for (int i = 0; i < paragraphList.size(); i++){
+		for (int j = 0; j < paragraphList[i]->nodeList.size(); j++){// this iterates through every word
+			for (int f = 0; f < paragraphList.size(); f++){
+				for (int x = 0; x < paragraphList[f]->nodeList.size(); x++){ // itterates through every word checking if it appears again and if so takes note of paragraph when it appaears
+					if (paragraphList[i]->nodeList[j]->word == paragraphList[f]->nodeList[x]->word){
+						for (int k = 0; k < paragraphList[i]->nodeList[j]->pList.size(); k++){
+							if (paragraphList[i]->nodeList[j]->pList[k] == paragraphList[f]->pNum){
+								flag = true;
+							}
+						}
+						if (flag == false){
+							paragraphList[i]->nodeList[j]->pList.push_back(paragraphList[f]->pNum);
+						}
+					}
+				}flag = false;
+			}
 		}
+	}
+}
 
-		stringstream iss(tempStringP);
+void stemFile(){
+	for (int i = 0; i < paragraphList.size(); i++)
+	{
+		for (int j = 0; j < paragraphList[i]->nodeList.size(); j++){
+			stem(paragraphList[i]->nodeList[j]->word);
+		}
+	}
 
-		while (getline(iss, tempStringP, ' ')){ //get string up to a space
+}
 
-			//This removes periods
-			unsigned long len = tempStringP.size();
-
-			for (unsigned long i = 0; i < len; i++) {
-
-				if (ispunct(tempStringP[i])) {
-					tempStringP.erase(i--, 1);
-					len = tempStringP.size();
+void printList(){
+	for (int i = 0; i < paragraphList.size(); i++)
+	{
+		cout << "Paragraph #" + to_string(paragraphList[i]->pNum) + ": " << endl;
+		for (int j = 0; j < paragraphList[i]->nodeList.size(); j++){
+			cout << paragraphList[i]->nodeList[j]->word << ": ";
+			for (int k = 0; k < paragraphList[i]->nodeList[j]->pList.size(); k++){
+				cout << paragraphList[i]->nodeList[j]->pList[k];
+				if (paragraphList[i]->nodeList[j]->pList.size()-1 != k){
+					cout << ", ";
 				}
 			}
-
-			//push string with removed punctuation onto the imported data list
-			if (!isStop(tempStringP)) {
-				Data.push_back(tempStringP);
-			}
-
+			cout << endl;
 		}
-		// cout << Pnumber << "\n";
-		Pgraphs.push_back(Data);
-		Data.clear();
+
 	}
 
-	//check where the words occur
-	for (vector<vector<string>>::iterator iter = Pgraphs.begin(); iter != Pgraphs.end(); iter++){
-		Pnumber++;
-		for (vector<string>::iterator iter2 = iter->begin(); iter2 != iter->end(); iter2++){
-			//this is where you input what you want to index
-//			if (find(iter2->begin(), iter2->end(), tempStringP) != iter2->end()) {
-//				cout << tempStringP << "is in the paragraph" << Pnumber;
-//			}
-		}
-	}
 }
 
-/*
-//printing the lists
-for(vector<vector<string>>::iterator iter = Pgraphs.begin(); iter!= Pgraphs.end(); iter++){
-Pnumber++;
-//  Pnumber = floor(Pnumber / 2);
-for(vector<string>::iterator iter2 = iter->begin(); iter2!= iter->end(); iter2++){
-
-cout << Pnumber << "\n ";
-cout << *iter2;
-
-if(iter2 == Data.end()) {
-break;
-} else {
-cout << ", ";
-}
-}
-}
-*/
-
-// This reads in the user query from stdin. 
-// Not really, we hard code in queries to check and make sure our stuff works
+// This reads in the user query from stdin
 void getQuery() {
-
+	
 }
 
 // This returns the amount of times that the query occurred in the doc
@@ -604,11 +570,9 @@ void returnResults(){
 
 // Main method
 int main() {
-	//string godly = "deformities";
-	//stem(godly);
-	//cout << godly << endl;
-	//system("pause");
 	populateMap();// puts the stop words in a map for quick access
-	getFile(); // reads std for the file to be input.
-	//index();
+	getFile();	// reads std for the file to be input.
+	stemFile();// reads std for the file to be input.
+	index();
+	printList();
 }
