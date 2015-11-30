@@ -26,9 +26,7 @@ program returns the amount of times that the query appears in given document
 */
 
 unordered_map<int, string> mymap;
-
 list<string> importedData;
-
 hash<string> strhash;
 
 void stem(string& word);
