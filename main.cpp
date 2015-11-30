@@ -114,7 +114,7 @@ void stem(string *input){
 	back = *input.length() - 1;
 	off = back - frnt; // kinda stupid, I know
 	
-	if (back + 1 > 2) {
+	if (back + 1 > 2) { //runs if the word is larger than 2 chars
 		step1a(*input);
 		step1b(*input);
 		step2(*input);
@@ -207,6 +207,7 @@ static int k,k0,j;       j is a general offset into the string
 void step1a(string *input){ //THIS IS NOT DONE. NEED TO WORK ON OTHER STUFF RIGHT NOW
 	//check if it ends with 's'
 	if (*input.back() == 's'){
+		//substr [i1,i2) = [1,5) = 1-4
 		if(*input.substr(end-3, 4) == "sses") { //ends in "sses"
 			end -= 2;
 		}
@@ -259,15 +260,33 @@ void step1b (string *input) {
 void step2 (string *input) {
 	switch (*input.at(end-1)){
 		case 'a':
-			if 
-			
-			break
+			if (*input.substr(end-6, 7) == "ational") {; break;}
+			if (*input.substr(end-5, 6) == "tional") {; break;}
+			break;
 		case 'c':
+			if (*input.substr(end-3, 4) == "enci") {; break;}
+			if (*input.substr(end-3, 4) == "anci") {; break;}
+			break;
 		case 'e':
+			if (*input.substr(end-3, 4) == "izer") {; break;}
+			break;
 		case 'l':
+			if (*input.substr(end-2, 3) == "bli") {; break;}
 		case 'o':
+			if (*input.substr(end-6, 7) == "ization") {; break;}
+			if (*input.substr(end-4, 5) == "ation") {; break;}
+			if (*input.substr(end-3, 4) == "ator") {; break;}
+			break;
 		case 's':
+			if (*input.substr(end-4, 5) == "alism") {; break;}
+			if (*input.substr(end-6, 7) == "iveness") {; break;}
+			if (*input.substr(end-6, 7) == "fulness") {; break;}
+			if (*input.substr(end-6, 7) == "ousness") {; break;}
+			break;
 		case 't':
+			if (*input.substr(end-4, 5) == "aliti") {; break;}
+			if (*input.substr(end-4, 5) == "iviti") {; break;}
+			if (*input.substr(end-5, 6) == "biliti") {; break;}
 		//case 'g':
 	}
 	
