@@ -572,8 +572,6 @@ void index() {
 	}
 }
 
-//}
-
 /*
 //printing the lists
 for(vector<vector<string>>::iterator iter = Pgraphs.begin(); iter!= Pgraphs.end(); iter++){
