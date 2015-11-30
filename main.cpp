@@ -243,6 +243,12 @@ void step1a(string *input){ //THIS IS NOT DONE. NEED TO WORK ON OTHER STUFF RIGH
 	}
 }
 
+void step1b (string *input) {
+	if(*input.back() == "y") {
+		*input.back() = 'i';
+	}
+}
+
 // This reads in the user query from stdin
 void getQuery() {
 
