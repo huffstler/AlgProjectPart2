@@ -118,7 +118,7 @@ void getFile(){
 			}
 
 			//push string with removed punctuation onto the imported data list
-			if (!isStop(tempStringP) && tempStringP!="") {
+			if (!isStop(tempStringP) && tempStringP != "") {
 				strNode *s = new strNode;
 				s->pList.push_back(listcount);
 				s->word = tempStringP;
@@ -523,29 +523,31 @@ void index() {
 							paragraphList[i]->nodeList[j]->pList.push_back(paragraphList[f]->pNum);
 						}
 					}
-				}
-				flag = false;
+				}flag = false;
 			}
 		}
 	}
 }
 
 void stemFile(){
-	for (int i = 0; i < paragraphList.size(); i++) {
+	for (int i = 0; i < paragraphList.size(); i++)
+	{
 		for (int j = 0; j < paragraphList[i]->nodeList.size(); j++){
 			stem(paragraphList[i]->nodeList[j]->word);
 		}
 	}
+
 }
 
 void printList(){
-	for (int i = 0; i < paragraphList.size(); i++) {
+	for (int i = 0; i < paragraphList.size(); i++)
+	{
 		cout << "Paragraph #" + to_string(paragraphList[i]->pNum) + ": " << endl;
 		for (int j = 0; j < paragraphList[i]->nodeList.size(); j++){
 			cout << paragraphList[i]->nodeList[j]->word << ": ";
 			for (int k = 0; k < paragraphList[i]->nodeList[j]->pList.size(); k++){
 				cout << paragraphList[i]->nodeList[j]->pList[k];
-				if (paragraphList[i]->nodeList[j]->pList.size()-1 != k){
+				if (paragraphList[i]->nodeList[j]->pList.size() - 1 != k){
 					cout << ", ";
 				}
 			}
@@ -557,16 +559,27 @@ void printList(){
 }
 
 // This reads in the user query from stdin
+vector<string> query;
 void inputQuery(string s) {
-	vector<string> query;
-	stringstream iss(s);
-
-	//getline()
 	/*
 	input a query
 	remove stop words
-	stem words	
+	stem words
 	*/
+	stringstream iss(s);
+	string m;
+	while (getline(iss, m, ' ')){
+		stem(m);
+		query.push_back(m);
+	}
+	cout << "You input: ";
+	for (int i = 0; i < query.size(); i++){
+		cout << query[i];
+		if (query.size() - 1 != i){
+			cout << ", ";
+		}
+	}
+	cout << endl;
 }
 
 // This returns the amount of times that the query occurred in the doc
