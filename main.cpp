@@ -260,33 +260,38 @@ void step1b (string *input) {
 void step2 (string *input) {
 	switch (*input.at(end-1)){
 		case 'a':
-			if (*input.substr(end-6, 7) == "ational") {; break;}
-			if (*input.substr(end-5, 6) == "tional") {; break;}
+			if (*input.substr(end-6, 7) == "ational") {*input.replace(substr(end-6, 7), "ate"); break;}
+			if (*input.substr(end-5, 6) == "tional") {*input.replace(substr(end-5, 6), "tion"); break;}
 			break;
 		case 'c':
-			if (*input.substr(end-3, 4) == "enci") {; break;}
-			if (*input.substr(end-3, 4) == "anci") {; break;}
+			if (*input.substr(end-3, 4) == "enci") {*input.replace(substr(end-3, 4), "ence"); break;}
+			if (*input.substr(end-3, 4) == "anci") {*input.replace(substr(end-3, 4), "ance"); break;}
 			break;
 		case 'e':
-			if (*input.substr(end-3, 4) == "izer") {; break;}
+			if (*input.substr(end-3, 4) == "izer") {*input.replace(substr(end-3, 4), "ize"); break;}
 			break;
 		case 'l':
-			if (*input.substr(end-2, 3) == "bli") {; break;}
+			if (*input.substr(end-2, 3) == "bli") {*input.replace(substr(end-2, 3), "ble"); break;}
+			if (*input.substr(end-3, 4) == "alli") {*input.replace(substr(end-3, 4), "al"); break;}
+			if (*input.substr(end-4, 5) == "entli") {*input.replace(substr(end-4, 5), "ent"); break;}
+			if (*input.substr(end-2, 3) == "eli") {*input.replace(substr(end-2, 3), "e"); break;}
+			if (*input.substr(end-4, 5) == "ousli") {*input.replace(substr(end-4, 5), "ous"); break;}
+			break;
 		case 'o':
-			if (*input.substr(end-6, 7) == "ization") {; break;}
-			if (*input.substr(end-4, 5) == "ation") {; break;}
-			if (*input.substr(end-3, 4) == "ator") {; break;}
+			if (*input.substr(end-6, 7) == "ization") {*input.replace(substr(end-6, 7), "ize"); break;}
+			if (*input.substr(end-4, 5) == "ation") {*input.replace(substr(end-4, 5), "ate"); break;}
+			if (*input.substr(end-3, 4) == "ator") {*input.replace(substr(end-3, 4), "ate"); break;}
 			break;
 		case 's':
-			if (*input.substr(end-4, 5) == "alism") {; break;}
-			if (*input.substr(end-6, 7) == "iveness") {; break;}
-			if (*input.substr(end-6, 7) == "fulness") {; break;}
-			if (*input.substr(end-6, 7) == "ousness") {; break;}
+			if (*input.substr(end-4, 5) == "alism") {*input.replace(substr(end-4, 5), "al"); break;}
+			if (*input.substr(end-6, 7) == "iveness") {*input.replace(substr(end-6, 7), "ive"); break;}
+			if (*input.substr(end-6, 7) == "fulness") {*input.replace(substr(end-6, 7), "ful"); break;}
+			if (*input.substr(end-6, 7) == "ousness") {*input.replace(substr(end-6, 7), "ous"); break;}
 			break;
 		case 't':
-			if (*input.substr(end-4, 5) == "aliti") {; break;}
-			if (*input.substr(end-4, 5) == "iviti") {; break;}
-			if (*input.substr(end-5, 6) == "biliti") {; break;}
+			if (*input.substr(end-4, 5) == "aliti") {*input.replace(substr(end-4, 5), "al"); break;}
+			if (*input.substr(end-4, 5) == "iviti") {*input.replace(substr(end-4, 5), "ive"); break;}
+			if (*input.substr(end-5, 6) == "biliti") {*input.replace(substr(end-5, 6) "ble"); break;}
 		//case 'g':
 	}
 	
