@@ -75,6 +75,7 @@ struct Node{
 	vector<strNode*> nodeList;
 };
 
+
 // This reads in an input file from stdin
 // Reads past new lines now
 vector<Node*> paragraphList;
@@ -511,7 +512,7 @@ void index() {
 	for (int i = 0; i < paragraphList.size(); i++){
 		for (int j = 0; j < paragraphList[i]->nodeList.size(); j++){// this iterates through every word
 			for (int f = 0; f < paragraphList.size(); f++){
-				for (int x = 0; x < paragraphList[f]->nodeList.size(); x++){ // iterates through every word checking if it appears again and if so takes note of paragraph when it appaears
+				for (int x = 0; x < paragraphList[f]->nodeList.size(); x++){ // itterates through every word checking if it appears again and if so takes note of paragraph when it appaears
 					if (paragraphList[i]->nodeList[j]->word == paragraphList[f]->nodeList[x]->word){
 						for (int k = 0; k < paragraphList[i]->nodeList[j]->pList.size(); k++){
 							if (paragraphList[i]->nodeList[j]->pList[k] == paragraphList[f]->pNum){
@@ -522,41 +523,53 @@ void index() {
 							paragraphList[i]->nodeList[j]->pList.push_back(paragraphList[f]->pNum);
 						}
 					}
-				}
-				flag = false;
+				}flag = false;
 			}
 		}
 	}
 }
 
-// Iterates through every word from the given file input.(Stdin)
 void stemFile(){
-	for (int i = 0; i < paragraphList.size(); i++) {
+	for (int i = 0; i < paragraphList.size(); i++)
+	{
 		for (int j = 0; j < paragraphList[i]->nodeList.size(); j++){
 			stem(paragraphList[i]->nodeList[j]->word);
 		}
 	}
+
 }
 
-// Prints the entiregiven list.
 void printList(){
-	for (int i = 0; i < paragraphList.size(); i++) {
+	for (int i = 0; i < paragraphList.size(); i++)
+	{
 		cout << "Paragraph #" + to_string(paragraphList[i]->pNum) + ": " << endl;
-		for (int j = 0; j < paragraphList[i]->nodeList.size(); j++) {
+		for (int j = 0; j < paragraphList[i]->nodeList.size(); j++){
 			cout << paragraphList[i]->nodeList[j]->word << ": ";
-			for (int k = 0; k < paragraphList[i]->nodeList[j]->pList.size(); k++) {
+			for (int k = 0; k < paragraphList[i]->nodeList[j]->pList.size(); k++){
 				cout << paragraphList[i]->nodeList[j]->pList[k];
-				if (paragraphList[i]->nodeList[j]->pList.size()-1 != k) {
+				if (paragraphList[i]->nodeList[j]->pList.size()-1 != k){
 					cout << ", ";
 				}
 			}
 			cout << endl;
 		}
+
 	}
+
 }
 
 // This reads in the user query from stdin
-void getQuery() {
+void inputQuery(string s) {
+	vector<string> query;
+	stringstream iss(s);
+
+	//getline()
+	/*
+	input a query
+	remove stop words
+	stem words	
+	*/
+
 	
 }
 
@@ -571,5 +584,6 @@ int main() {
 	getFile();	// reads std for the file to be input.
 	stemFile();// reads std for the file to be input.
 	index();
+	inputQuery("Put your query input here");
 	printList();
 }
