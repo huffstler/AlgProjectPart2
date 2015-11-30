@@ -127,6 +127,7 @@ void getFile(){
 				if (isdigit(tempStringP[i])) {
 					tempStringP.erase(i--, 1);
 					len = tempStringP.size();
+				}
 				if (ispunct(tempStringP[i])) {
 					tempStringP.erase(i--, 1);
 					len = tempStringP.size();
