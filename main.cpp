@@ -59,28 +59,28 @@ void getFile(){
         for (int i = 0; tempStringP[i] != '\0'; i++){//lowercase everything
             tempStringP[i] = tolower(tempStringP[i]);
         }
-    
-    
-    stringstream iss(tempStringP);
-    while (getline(iss, tempStringP, ' ')){ //get string up to a space
         
-        //This removes periods
-        unsigned long len = tempStringP.size();
-        for (unsigned long i = 0; i < len; i++)
-        {
-            if (ispunct(tempStringP[i]))
+        
+        stringstream iss(tempStringP);
+        while (getline(iss, tempStringP, ' ')){ //get string up to a space
+            
+            //This removes periods
+            unsigned long len = tempStringP.size();
+            for (unsigned long i = 0; i < len; i++)
             {
-                tempStringP.erase(i--, 1);
-                len = tempStringP.size();
+                if (ispunct(tempStringP[i]))
+                {
+                    tempStringP.erase(i--, 1);
+                    len = tempStringP.size();
+                }
             }
+            
+            //push string with removed punctuation onto the imported data list
+            if(!isStop(tempStringP)) {
+                importedData.push_back(tempStringP);
+            }
+            count++;
         }
-        
-        //push string with removed punctuation onto the imported data list
-        if(!isStop(tempStringP)) {
-        importedData.push_back(tempStringP);
-        }
-        count++;
-    }
     }
     
     //This prints my imported data so I can see that it is correct
@@ -108,9 +108,9 @@ void getFile(){
 }
 
 void populateMap() { // Done
-	for (int i = 0; i < stopWords.size(); i++){
-		mymap.insert(make_pair(strhash(stopWords[i]),stopWords[i]));
-	}
+    for (int i = 0; i < stopWords.size(); i++){
+        mymap.insert(make_pair(strhash(stopWords[i]),stopWords[i]));
+    }
 }
 
 
@@ -118,34 +118,34 @@ void populateMap() { // Done
 // this removes stop words from the input (and the query)
 //Currently not using this, instead only adding non stop words when parsing in getFile()
 /*
-void rmStopWords() {
-    list<string> myOtherList;
+ void rmStopWords() {
+ list<string> myOtherList;
 	if(!importedData.empty()) {
-		auto iter = importedData.begin();
-		
-        while(true) {
-            if (isStop(*iter)){ // Means that the word is a stop word
-            	cout << "\"" << *iter << "\"" <<  " IS a stop word" << endl;
-                
-            	//importedData.erase(iter); // remove the word from the list
-            	++iter;
-            }
-            
-            else {
-                cout << "\"" <<*iter<< "\"" << " is NOT a stop word" << endl;
-                myOtherList.push_back(*iter);
-                ++iter;
-            }
-            if(iter == importedData.end()) {
-            	cout << "at the end." << endl;
-                break;
-            }
-        }
-    }
+ auto iter = importedData.begin();
+ 
+ while(true) {
+ if (isStop(*iter)){ // Means that the word is a stop word
+ cout << "\"" << *iter << "\"" <<  " IS a stop word" << endl;
+ 
+ //importedData.erase(iter); // remove the word from the list
+ ++iter;
+ }
+ 
+ else {
+ cout << "\"" <<*iter<< "\"" << " is NOT a stop word" << endl;
+ myOtherList.push_back(*iter);
+ ++iter;
+ }
+ if(iter == importedData.end()) {
+ cout << "at the end." << endl;
+ break;
+ }
+ }
+ }
 	else{
-		cout << "There was nothing given in stdin. Exiting." << endl;
+ cout << "There was nothing given in stdin. Exiting." << endl;
 	}
-}
+ }
  */
 
 // This stems the string that it is given
@@ -170,10 +170,10 @@ void returnResults(){
 
 // Main method
 int main() {
-	
+    
     populateMap(); // puts the stop words in a map for quick access
     getFile(); // reads std for the file to be input.
-	
-	//rmStopWords();
+    
+    //rmStopWords();
     
 }
